@@ -1,17 +1,17 @@
 [tool.poetry]
 name = "ai-resume"
 version = "0.1.0"
-description = "GPT-4 API-base Resume & Self-introduction Creation Service"
+description = ""
 authors = ["ruo <comsa333@gmail.com>"]
 readme = "README.md"
 packages = [{include = "ai_resume"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
-sqlalchemy = "^2.0.7"
+python = "^3.10"
 pandas = "^1.5.3"
-streamlit = "^1.20.0"
+sqlalchemy = "^2.0.7"
 psycopg2-binary = "^2.9.5"
+streamlit = "^1.20.0"
 openai = "^0.27.2"
 
 
