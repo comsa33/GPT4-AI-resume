@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
   - port: {{ .Values.service.port }}
-    targetPort: 8503
+    targetPort: 8501
     protocol: TCP
-    nodePort: 31427
+    nodePort: 31421
   selector:
     app: {{ .Chart.Name }}
