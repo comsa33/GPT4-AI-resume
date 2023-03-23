@@ -149,51 +149,40 @@ with st.expander('펼쳐보기'):
     - 타 부서 업무 협업 웹앱 제공(streamlit 사용하여 DL 모델 서빙)'''
         )
 
-
-
-    prompt_msg = f"""Write a self-introduction for the postion of {position} at {company_name}.
-Refer to the candidate's information and job description below.
-
-Here is the candidate information.
-    - basic information: {edited_info_df.to_dict()}
-    - education background: {edited_edu_df.to_dict()}
-    - skills: {my_skills}
-    - career: {edited_career_df.to_dict()}
-    - achievements: {my_achievements}
-and Here is Job description:
-    - job requirements: {requirements}
-    - job main tasks: {main_tasks}
-    - introduction of the company: {intro}
-
-It should be written in Korean and Markdown language.
-
-Refer to the following writing style and contents' flow.
-
-- 인사말 및 간단 자기소개 
-    - 학력을 언급하지는 말고 경력과 관련 역량 위주로 어필할 것
-    - 회사에 대한 인재상과 적합한 지원자라는 것을 어필할 수 있다면 할 것
-- 회사의 목표와 align된 지원동기
-    - 왜 이 회사 혹은 지원하고자 하는 직무와 잘 맞는지 상세한 근거를 언급할 것
-    - 회사 소개에 나온 말을 그대로 인용하지 말고 다른 표현으로 돌려서 서술
-- 지원하고자 하는 직무와 align된 내가 보유한 대표 역량(커리어에 기반하여 작성), 스킬 및 관련된 세부 경험(목록을 만들지 말고 서술형으로 자연스럽게)
-    - 직무와 관련된 역량을 증명할 수 있는 업무 중 힘들었지만 이를 극복한 사례
-    - 업무 역량을 보여줄 수 있는 가장 즐거웠던 프로젝트나 업무 경험
-- 지원하고자 하는 직무에 잘 맞는 나의 강점 (mbti성향을 참고할 것. 하지만 지원자의 mbti를 글에 직접 언급하지는 말 것)
-    - 나의 강점을 설명할 수 있는 관련된 경험 사례
-- 나의 앞으로의 계획 및 각오
-    - 어떻게 나의 계획이 회사의 성장에 직간접적으로 도움이 될 것인지를 내포"""
-
-if st.button('AI 자소서 만들기'):
-    try:
-        completion = openai.ChatCompletion.create(
-            model=st.session_state.model_name,
-            temperature=st.session_state.temperature,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that write a self-introduction."},
-                {"role": "user", "content": f"{prompt_msg}"}
-            ]
+st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
+with st.expander('펼쳐보기'):
+    st.radio(
+        "- AI가 작성할 글을 선택하세요 👇",
+        ('자기소개서', '지원동기', '나의 장단점'),
+        key="writing_type"
         )
-        st.markdown("### AI 추천 자소서 결과")
-        st.markdown(completion.choices[0].message["content"])
-    except Exception as e:
-        st.write(e)
+
+    prompt_msg = f"""{company_name}의 {position} 직무에 지원하려는데 {st.session_state.writing_type}를 써줘.
+    아래 내 정보를 참고해서 써줘.
+        - 개인 정보: {edited_info_df.to_dict()}
+        - 성향: {edited_info_df.to_dict()['mbti'][0]}
+        - 학력 정보: {edited_edu_df.to_dict()}
+        - 보유 스킬: {my_skills}
+        - 경력 정보: {edited_career_df.to_dict()}
+        - 경력기술서 및 성과: {my_achievements}
+    {company_name}의 {position} 직무에 대한 채용정보는 다음과 같아.
+        - 직무기술: {requirements}
+        - 맡게 될 업무: {main_tasks}
+        - 회사에 대한 간단한 소개 및 정보: {intro}
+
+    한국어로 써줘 그리고 markdown 언어로 써줘."""
+
+    if st.button('글쓰기'):
+        try:
+            completion = openai.ChatCompletion.create(
+                model=st.session_state.model_name,
+                temperature=st.session_state.temperature,
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that write a self-introduction."},
+                    {"role": "user", "content": f"{prompt_msg}"}
+                ]
+            )
+            st.markdown("### AI 추천 자소서 결과")
+            st.markdown(completion.choices[0].message["content"])
+        except Exception as e:
+            st.write(e)
