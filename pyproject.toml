@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "ai_resume"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 sqlalchemy = "^2.0.7"
 pandas = "^1.5.3"
 streamlit = "^1.20.0"
