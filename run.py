@@ -20,6 +20,7 @@ st.title('GPT-4 API-base Resume & Self-introduction Creation Service')
 
 with st.sidebar:
     st.markdown("===[GPT 모델설정]===")
+    st.markdown("[OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     st.text_input(
         "Enter your OpenAI API Keys 👇",
         "",
