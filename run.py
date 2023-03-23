@@ -157,20 +157,19 @@ with st.expander('펼쳐보기'):
         key="writing_type"
         )
 
-    prompt_msg = f"""{company_name}의 {position} 직무에 지원하려는데 {st.session_state.writing_type}를 써줘.
-    아래 내 정보를 참고해서 써줘.
-        - 개인 정보: {edited_info_df.to_dict()}
-        - 성향: {edited_info_df.to_dict()['mbti'][0]}
-        - 학력 정보: {edited_edu_df.to_dict()}
-        - 보유 스킬: {my_skills}
-        - 경력 정보: {edited_career_df.to_dict()}
-        - 경력기술서 및 성과: {my_achievements}
+    prompt_msg = f"""{company_name}의 {position} 직무에 지원하려는데 {st.session_state.writing_type}를 서술형으로 써줘(600~1000자 사이).
+    한국어와 markdown 언어로 써줘.
+    다음은 나에 대한 정보야.
+        - 나의 개인 정보: {edited_info_df.to_dict()}
+        - 나의 성향: {edited_info_df.to_dict()['mbti'][0]}
+        - 내 학력: {edited_edu_df.to_dict()}
+        - 내 보유 스킬: {my_skills}
+        - 내 경력 정보: {edited_career_df.to_dict()}
+        - 내 경력기술서 및 성과: {my_achievements}
     {company_name}의 {position} 직무에 대한 채용정보는 다음과 같아.
         - 직무기술: {requirements}
         - 맡게 될 업무: {main_tasks}
-        - 회사에 대한 간단한 소개 및 정보: {intro}
-
-    한국어로 써줘 그리고 markdown 언어로 써줘."""
+        - 회사에 대한 간단한 소개 및 정보: {intro}"""
 
     if st.button('글쓰기'):
         try:
@@ -182,7 +181,7 @@ with st.expander('펼쳐보기'):
                     {"role": "user", "content": f"{prompt_msg}"}
                 ]
             )
-            st.markdown("### AI 추천 자소서 결과")
+            st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
             st.markdown(completion.choices[0].message["content"])
         except Exception as e:
             st.write(e)
