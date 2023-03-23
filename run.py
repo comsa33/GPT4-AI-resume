@@ -49,11 +49,12 @@ if st.session_state.API_KEY:
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
-with st.expander('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요 👇'):
+st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
+with st.expander('펼쳐보기'):
     col1, col2 = st.columns([1, 2])
     with col1:
         st.text_input(
-            "원하는 직무를 검색하세요 👇",
+            "- 원하는 직무를 검색하세요 👇",
             "데이터 엔지니어",
             key="search_term"
         )
@@ -61,7 +62,7 @@ with st.expander('원하는 직무를 검색하고 자소서를 작성할 채용
         temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
         st.dataframe(temp_df)
         st.selectbox(
-                "Choose the Index No. of the Job Posting 👇",
+                "- 채용공고 인덱스를 선택하세요 👇",
                 temp_df.index.tolist(),
                 key="jp_index"
             )
@@ -76,14 +77,15 @@ with st.expander('원하는 직무를 검색하고 자소서를 작성할 채용
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
-            st.markdown('### 채용공고 상세정보')
-            st.markdown("필드를 더블클릭하면 세부내용을 확인할 수 있습니다.")
-            st.checkbox("Use container width", value=False, key="use_container_width")
+            st.markdown('- 채용공고 상세정보')
+            st.markdown("   (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)")
+            st.checkbox("표 넓게보기", value=False, key="use_container_width")
             st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
-with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요 👇'):
-    st.markdown('- 박스를 더블클릭하면 정보를 수정할 수 있습니다.')
-    st.markdown('### 지원자 기본정보')
+st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
+with st.expander('펼쳐보기'):
+    st.markdown('   (필드박스를 더블클릭하면 정보를 수정할 수 있습니다.)')
+    st.markdown('- 지원자 기본정보')
     info_df = pd.DataFrame(
         [
             {
@@ -96,17 +98,9 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
     )
     edited_info_df = st.experimental_data_editor(info_df)
 
-    st.markdown('### 지원자 학력정보')
+    st.markdown('- 지원자 학력정보')
     edu_df = pd.DataFrame(
         [
-            {
-                "name": "전남대학교",
-                "major": "시각디자인",
-                "start_dt": "2003.03",
-                "end_dt": "2012.02",
-                "status": "졸업",
-                "kind": "학사"
-            },
             {
                 "name": "고려사이버대학교",
                 "major": "인공지능",
@@ -119,7 +113,7 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
     )
     edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
 
-    st.markdown('### 지원자 경력정보')
+    st.markdown('- 지원자 경력정보')
     career_df = pd.DataFrame(
         [
             {
@@ -141,13 +135,13 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
     edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
 
     my_skills = st.multiselect(
-        'Choose your skills',
+        '- 지원자 스킬정보',
         skills,
         [])
 
     my_achievements = st.text_area(
-        'Enter the description of your career achievements',
-    '''### 1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
+        '지원자 경력기술서 및 성과내용',
+    '''1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
     - 문서 간 토픽모델링을 위한 LDA 분석 및 시각화
     - 텍스트 간 유사 범주 어휘 분석을 위해 PCA/t-SNE 분석 적용 및 시각화
     - 모델 성능 평가를 위한 10,000건의 테스트 데이터 구성
@@ -157,32 +151,37 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
 
 
 
-    prompt_msg = f"""
-    Write a self-introduction for the postion of {position} at {company_name}.
-    Refer to the candidate's information and job description below.
+    prompt_msg = f"""Write a self-introduction for the postion of {position} at {company_name}.
+Refer to the candidate's information and job description below.
 
-    Here is the candidate information.
-        - basic information: {edited_info_df.to_dict()}
-        - education background: {edited_edu_df.to_dict()}
-        - skills: {my_skills}
-        - career: {edited_career_df.to_dict()}
-        - achievements: {my_achievements}
-    and Here is Job description:
-        - job requirements: {requirements}
-        - job main tasks: {main_tasks}
-        - introduction of the company: {intro}
+Here is the candidate information.
+    - basic information: {edited_info_df.to_dict()}
+    - education background: {edited_edu_df.to_dict()}
+    - skills: {my_skills}
+    - career: {edited_career_df.to_dict()}
+    - achievements: {my_achievements}
+and Here is Job description:
+    - job requirements: {requirements}
+    - job main tasks: {main_tasks}
+    - introduction of the company: {intro}
 
-    It should be written in Korean and Markdown language.
+It should be written in Korean and Markdown language.
 
-    Refer to the following writing style and contents' flow.
+Refer to the following writing style and contents' flow.
 
-    - 인사말 및 간단 자기소개 (학력을 언급하지는 말고 경력과 관련 역량 위주로 어필할 것)
-    - 회사의 목표와 align된 지원동기 (왜 이 회사 혹은 지원하고자 하는 직무와 잘 맞는지 상세한 근거를 언급할 것)
-    - 지원하고자 하는 직무와 align된 내가 보유한 대표 역량(커리어에 기반하여 작성), 스킬 및 관련된 세부 경험(목록을 만들지 말고 서술형으로 자연스럽게)
-    - 지원하고자 하는 직무에 잘 맞는 나의 강점 (mbti성향을 참고하되 지원자의 mbti를 직접적으로 언급하지는 말 것) 및 관련된 경험 사례
-    - 나의 앞으로의 계획 및 각오
-
-    """
+- 인사말 및 간단 자기소개 
+    - 학력을 언급하지는 말고 경력과 관련 역량 위주로 어필할 것
+    - 회사에 대한 인재상과 적합한 지원자라는 것을 어필할 수 있다면 할 것
+- 회사의 목표와 align된 지원동기
+    - 왜 이 회사 혹은 지원하고자 하는 직무와 잘 맞는지 상세한 근거를 언급할 것
+    - 회사 소개에 나온 말을 그대로 인용하지 말고 다른 표현으로 돌려서 서술
+- 지원하고자 하는 직무와 align된 내가 보유한 대표 역량(커리어에 기반하여 작성), 스킬 및 관련된 세부 경험(목록을 만들지 말고 서술형으로 자연스럽게)
+    - 직무와 관련된 역량을 증명할 수 있는 업무 중 힘들었지만 이를 극복한 사례
+    - 업무 역량을 보여줄 수 있는 가장 즐거웠던 프로젝트나 업무 경험
+- 지원하고자 하는 직무에 잘 맞는 나의 강점 (mbti성향을 참고할 것. 하지만 지원자의 mbti를 글에 직접 언급하지는 말 것)
+    - 나의 강점을 설명할 수 있는 관련된 경험 사례
+- 나의 앞으로의 계획 및 각오
+    - 어떻게 나의 계획이 회사의 성장에 직간접적으로 도움이 될 것인지를 내포"""
 
 if st.button('AI 자소서 만들기'):
     try:
