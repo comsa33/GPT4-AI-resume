@@ -41,11 +41,6 @@ with st.sidebar:
         st.session_state.table_names,
         key="table_name"
     )
-    st.text_input(
-        "Enter the position you are interested in 👇",
-        "데이터 엔지니어",
-        key="search_term"
-    )
 
 if st.session_state.API_KEY:
     openai.api_key = st.session_state.API_KEY
@@ -53,10 +48,15 @@ if st.session_state.API_KEY:
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.markdown(f"- 공고 포지션 중 [{st.session_state.search_term}] 단어가 포함된 채용공고 목록")
+    st.text_input(
+        "원하는 직무를 검색하세요 👇",
+        "데이터 엔지니어",
+        key="search_term"
+    )
+    st.markdown(f"- 채용공고 중 검색결과")
     temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
     st.dataframe(temp_df)
     st.selectbox(
@@ -76,10 +76,12 @@ with col2:
         intro = posting['intro']
 
         st.markdown('### 채용공고 상세정보')
+        st.markdown("필드를 더블클릭하면 세부내용을 확인할 수 있습니다.")
         st.checkbox("Use container width", value=False, key="use_container_width")
         st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
 with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요 👇'):
+    st.markdown('- 박스를 더블클릭하면 정보를 수정할 수 있습니다.')
     st.markdown('### 지원자 기본정보')
     info_df = pd.DataFrame(
         [
