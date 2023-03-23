@@ -48,37 +48,37 @@ if st.session_state.API_KEY:
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
-col1, col2 = st.columns([1, 2])
-
-with col1:
-    st.text_input(
-        "원하는 직무를 검색하세요 👇",
-        "데이터 엔지니어",
-        key="search_term"
-    )
-    st.markdown(f"- 채용공고 중 검색결과")
-    temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
-    st.dataframe(temp_df)
-    st.selectbox(
-            "Choose the Index No. of the Job Posting 👇",
-            temp_df.index.tolist(),
-            key="jp_index"
+with st.expander('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요 👇'):
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.text_input(
+            "원하는 직무를 검색하세요 👇",
+            "데이터 엔지니어",
+            key="search_term"
         )
+        st.markdown(f"- 채용공고 중 검색결과")
+        temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
+        st.dataframe(temp_df)
+        st.selectbox(
+                "Choose the Index No. of the Job Posting 👇",
+                temp_df.index.tolist(),
+                key="jp_index"
+            )
 
-with col2:
-    if st.session_state.jp_index:
-        posting = df.iloc[int(st.session_state.jp_index)]
+    with col2:
+        if st.session_state.jp_index:
+            posting = df.iloc[int(st.session_state.jp_index)]
 
-        company_name = posting['company_name']
-        position = posting['position']
-        requirements = posting['requirements']
-        main_tasks = posting['main_tasks']
-        intro = posting['intro']
+            company_name = posting['company_name']
+            position = posting['position']
+            requirements = posting['requirements']
+            main_tasks = posting['main_tasks']
+            intro = posting['intro']
 
-        st.markdown('### 채용공고 상세정보')
-        st.markdown("필드를 더블클릭하면 세부내용을 확인할 수 있습니다.")
-        st.checkbox("Use container width", value=False, key="use_container_width")
-        st.dataframe(posting, use_container_width=st.session_state.use_container_width)
+            st.markdown('### 채용공고 상세정보')
+            st.markdown("필드를 더블클릭하면 세부내용을 확인할 수 있습니다.")
+            st.checkbox("Use container width", value=False, key="use_container_width")
+            st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
 with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요 👇'):
     st.markdown('- 박스를 더블클릭하면 정보를 수정할 수 있습니다.')
@@ -93,7 +93,7 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
             }
         ]
     )
-    edited_info_df = st.experimental_data_editor(info_df, num_rows="dynamic")
+    edited_info_df = st.experimental_data_editor(info_df)
 
     st.markdown('### 지원자 학력정보')
     edu_df = pd.DataFrame(
@@ -256,5 +256,5 @@ if st.button('AI 자소서 만들기'):
         )
         st.markdown("### AI 추천 자소서 결과")
         st.markdown(completion.choices[0].message["content"])
-    except AuthenticationError:
-        st.write("API-KEY를 입력하세요.")
+    except Exception as e:
+        st.write(e)
