@@ -14,7 +14,7 @@ RUN apt update -y
 RUN apt upgrade -y
 RUN pip install -r requirements.txt
 RUN poetry config virtualenvs.create false
-RUN if [ -f pyproject.toml ]; then poetry install; fi
+RUN if [ -f pyproject.toml ]; then poetry install --verbose; fi
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app/
