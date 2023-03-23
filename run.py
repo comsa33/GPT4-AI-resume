@@ -93,7 +93,7 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
             }
         ]
     )
-    edited_info_df = st.experimental_data_editor(info_df)
+    edited_info_df = st.experimental_data_editor(info_df, num_rows="dynamic")
 
     st.markdown('### 지원자 학력정보')
     edu_df = pd.DataFrame(
@@ -116,7 +116,7 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
             }
     ]
     )
-    edited_edu_df = st.experimental_data_editor(edu_df)
+    edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
 
     st.markdown('### 지원자 경력정보')
     career_df = pd.DataFrame(
@@ -159,7 +159,7 @@ with st.expander('지원자 정보를 자신의 정보에 맞게 수정하세요
             }
         ]
     )
-    edited_career_df = st.experimental_data_editor(career_df)
+    edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
 
     my_skills = st.multiselect(
         'Choose your skills',
