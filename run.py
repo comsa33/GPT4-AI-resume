@@ -5,8 +5,6 @@ import pandas as pd
 import core.functions as funcs
 
 
-st.session_state.table_names = funcs.table_names
-st.session_state.models = ["gpt-3.5-turbo", "gpt-4"]
 
 st.set_page_config(
     page_title="AI 자소서",
@@ -14,6 +12,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
 )
+
+st.session_state.table_names = funcs.table_names
+st.session_state.models = ["gpt-3.5-turbo", "gpt-4"]
+
 st.title('GPT-4 API-base Resume & Self-introduction Creation Service')
 
 with st.sidebar:
@@ -61,10 +63,10 @@ st.text_input(
 info_df = pd.DataFrmae(
     [
         {
-            "fullname" = "이루오"
-            "birthday" = "1985.01.10"
-            "sex" = "male"
-            "mbti" = "ENTJ"
+            "fullname": "이루오",
+            "birthday": "1985.01.10",
+            "sex": "male",
+            "mbti": "ENTJ"
         }
     ]
 )
@@ -78,7 +80,7 @@ edu_df = pd.DataFrame(
             "start_dt": "2003.03",
             "end_dt": "2012.02",
             "status": "졸업",
-            "kind": "학사",
+            "kind": "학사"
         },
         {
             "name": "고려사이버대학교",
@@ -140,7 +142,7 @@ my_skills = st.multiselect(
     [])
 
 my_achievements = st.text_area(
-    'Enter the description of your career achievements', 
+    'Enter the description of your career achievements',
 '''
 ### 1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
 - 문서 간 토픽모델링을 위한 LDA 분석 및 시각화
@@ -239,4 +241,3 @@ if st.button('AI 자소서 만들기'):
         ]
     )
     st.markdown(completion.choices[0].message["content"])
-
