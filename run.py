@@ -60,7 +60,7 @@ st.text_input(
     )
 
 
-info_df = pd.DataFrmae(
+info_df = pd.DataFrame(
     [
         {
             "fullname": "이루오",
