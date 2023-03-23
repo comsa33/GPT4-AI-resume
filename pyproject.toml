@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["ruo <comsa333@gmail.com>"]
 readme = "README.md"
-packages = [{include = "ai_resume"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
