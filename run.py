@@ -49,7 +49,7 @@ if st.session_state.API_KEY:
     openai.api_key = st.session_state.API_KEY
 
 df = funcs.get_data(st.session_state.table_name)
-skills = sum(df['skill_tags'].tolist(), [])
+skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
 st.dataframe(df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]])
 
@@ -59,7 +59,20 @@ st.text_input(
     key="jp_index"
     )
 
+if st.session_state.jp_index:
+    posting = df.iloc[int(st.session_state.jp_index)]
 
+    company_name = posting['company_name']
+    position = posting['position']
+    requirements = posting['requirements']
+    main_tasks = posting['main_tasks']
+    intro = posting['intro']
+
+    st.markdown('### 채용공고 상세정보')
+    st.dataframe(posting)
+
+st.markdown('지원자 정보를 자신의 정보에 맞게 수정하세요 👇')
+st.markdown('### 지원자 기본정보')
 info_df = pd.DataFrame(
     [
         {
@@ -72,6 +85,7 @@ info_df = pd.DataFrame(
 )
 edited_info_df = st.experimental_data_editor(info_df)
 
+st.markdown('### 지원자 학력정보')
 edu_df = pd.DataFrame(
     [
         {
@@ -94,6 +108,7 @@ edu_df = pd.DataFrame(
 )
 edited_edu_df = st.experimental_data_editor(edu_df)
 
+st.markdown('### 지원자 경력정보')
 career_df = pd.DataFrame(
     [
         {
@@ -192,16 +207,6 @@ my_achievements = st.text_area(
 '''
     )
 
-if st.session_state.jp_index:
-    posting = df.iloc[int(st.session_state.jp_index)]
-
-    company_name = posting['company_name']
-    position = posting['position']
-    requirements = posting['requirements']
-    main_tasks = posting['main_tasks']
-    intro = posting['intro']
-
-    st.dataframe(posting)
 
 
 prompt_msg = f"""
@@ -232,12 +237,15 @@ Refer to the following writing style and contents' flow.
 """
 
 if st.button('AI 자소서 만들기'):
-    completion = openai.ChatCompletion.create(
-        model=st.session_state.model_name,
-        temperature=st.session_state.temperature,
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant that write a self-introduction."},
-            {"role": "user", "content": f"{prompt_msg}"}
-        ]
-    )
-    st.markdown(completion.choices[0].message["content"])
+    try:
+        completion = openai.ChatCompletion.create(
+            model=st.session_state.model_name,
+            temperature=st.session_state.temperature,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that write a self-introduction."},
+                {"role": "user", "content": f"{prompt_msg}"}
+            ]
+        )
+        st.markdown(completion.choices[0].message["content"])
+    except AuthenticationError:
+        st.write("API-KEY를 입력하세요.")
