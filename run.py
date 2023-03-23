@@ -51,12 +51,13 @@ if st.session_state.API_KEY:
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
-st.dataframe(df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]])
-
-st.text_input(
-    "Enter the Index No. of the Job Posting 👇",
-    "",
-    key="jp_index"
+st.markdown(f"- 공고 포지션 중 [{st.session_state.search_term}] 단어가 포함된 채용공고 목록")
+temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
+st.dataframe(temp_df)
+st.selectbox(
+        "Choose the Index No. of the Job Posting 👇",
+        temp_df.index.tolist(),
+        key="jp_index"
     )
 
 if st.session_state.jp_index:
@@ -158,8 +159,7 @@ my_skills = st.multiselect(
 
 my_achievements = st.text_area(
     'Enter the description of your career achievements',
-'''
-### 1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
+'''### 1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
 - 문서 간 토픽모델링을 위한 LDA 분석 및 시각화
 - 텍스트 간 유사 범주 어휘 분석을 위해 PCA/t-SNE 분석 적용 및 시각화
 - 모델 성능 평가를 위한 10,000건의 테스트 데이터 구성
@@ -203,8 +203,7 @@ my_achievements = st.text_area(
 ### 7. 서울시 IoT 도시데이터 분석(서울시청 외주)
 - 시계열 데이터 분석 및 정제
 - 시계열 데이터 분석 시각화 리포트 작성
-- 도메인 별 시계열 데이터 품질 가이드 템플릿 작성
-'''
+- 도메인 별 시계열 데이터 품질 가이드 템플릿 작성'''
     )
 
 
@@ -246,6 +245,7 @@ if st.button('AI 자소서 만들기'):
                 {"role": "user", "content": f"{prompt_msg}"}
             ]
         )
+        st.markdown("### AI 추천 자소서 결과")
         st.markdown(completion.choices[0].message["content"])
     except AuthenticationError:
         st.write("API-KEY를 입력하세요.")
