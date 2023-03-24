@@ -181,52 +181,56 @@ with st.expander('펼쳐보기'):
         )
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-with st.expander('펼쳐보기'):
-    st.radio(
-        "- AI가 작성할 글을 선택하세요 👇",
-        ('자기소개', '지원동기', '나의 장단점'),
-        key="writing_type"
+st.radio(
+    "- AI가 작성할 글을 선택하세요 👇",
+    ('자기소개', '지원동기', '나의 장단점'),
+    key="writing_type"
+    )
+
+jp_desc = f"""
+- 회사이름: {company_name}
+- 채용직무: {position}
+- 직무기술: {requirements}
+- 맡게 될 업무: {main_tasks}
+- 회사에 대한 간단한 소개 및 정보: {intro}"""
+user_desc = f"""
+- 나의 개인 정보: {edited_info_df.to_dict()}
+- 나의 성향: {edited_info_df.to_dict()['mbti'][0]}
+- 내 학력: {edited_edu_df.to_dict()}
+- 내 보유 스킬: {my_skills}
+- 내 경력 정보: {edited_career_df.to_dict()}
+- 내 경력기술서 및 성과: {my_achievements}"""
+prompt_msg = f"""회사에 이력서와 함께 제출할 {st.session_state.writing_type}에 대한 글을 작성하세요.(600~1000자 사이).
+회사의 가치, 문화, 비즈니스 및 기대하는 역량에 대한 이해를 토대로 작성하세요.
+지나치게 길거나 어려운 문장은 피하세요. 간결하고 명확한 문장으로 긍정적인 이미지를 전달하며 읽기 쉽게 작성하세요.
+개인적인 이야기와 성과를 통해 지원자의 독특한 가치를 증명할 수 있도록 작성하세요.
+경험과 역량을 설명할 때 구체적인 예시를 들어서 설명하세요. 사례를 통해 지원자가 실제로 어떤 업무를 수행했는지 보여주어 신뢰성을 높은 글을 작성하세요.
+존대말, 겸손한 표현 및 적절한 경어를 사용하여 전문성을 보여주세요. 지나친 자신감이나 거만한 표현은 피하세요.
+한국어와 markdown 언어로 작성하세요."""
+
+if st.button('글쓰기'):
+    try:
+        response = openai.ChatCompletion.create(
+            model=st.session_state.model_name,
+            temperature=st.session_state.temperature,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                {"role": "assistant", "content": "네, 알겠습니다."},
+                {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                {"role": "assistant", "content": "네, 알겠습니다."},
+                {"role": "user", "content": f"{prompt_msg}"}
+            ],
+            stream=True,
         )
-
-    jp_desc = f"""
-    - 회사이름: {company_name}
-    - 채용직무: {position}
-    - 직무기술: {requirements}
-    - 맡게 될 업무: {main_tasks}
-    - 회사에 대한 간단한 소개 및 정보: {intro}"""
-    user_desc = f"""
-    - 나의 개인 정보: {edited_info_df.to_dict()}
-    - 나의 성향: {edited_info_df.to_dict()['mbti'][0]}
-    - 내 학력: {edited_edu_df.to_dict()}
-    - 내 보유 스킬: {my_skills}
-    - 내 경력 정보: {edited_career_df.to_dict()}
-    - 내 경력기술서 및 성과: {my_achievements}"""
-    prompt_msg = f"""회사에 이력서와 함께 제출할 {st.session_state.writing_type}에 대한 글을 작성하세요.(600~1000자 사이).
-    회사의 가치, 문화, 비즈니스 및 기대하는 역량에 대한 이해를 토대로 작성하세요.
-    지나치게 길거나 어려운 문장은 피하세요. 간결하고 명확한 문장으로 긍정적인 이미지를 전달하며 읽기 쉽게 작성하세요.
-    개인적인 이야기와 성과를 통해 지원자의 독특한 가치를 증명할 수 있도록 작성하세요.
-    경험과 역량을 설명할 때 구체적인 예시를 들어서 설명하세요. 사례를 통해 지원자가 실제로 어떤 업무를 수행했는지 보여주어 신뢰성을 높은 글을 작성하세요.
-    존대말, 겸손한 표현 및 적절한 경어를 사용하여 전문성을 보여주세요. 지나친 자신감이나 거만한 표현은 피하세요.
-    한국어와 markdown 언어로 작성하세요."""
-
-    if st.button('글쓰기'):
-        try:
-            response = openai.ChatCompletion.create(
-                model=st.session_state.model_name,
-                temperature=st.session_state.temperature,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                    {"role": "assistant", "content": "네, 알겠습니다."},
-                    {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                    {"role": "assistant", "content": "네, 알겠습니다."},
-                    {"role": "user", "content": f"{prompt_msg}"}
-                ],
-                stream=True,
-            )
-            st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
-            for chunk in response:
-                if chunk['choices'][0]['delta'].get('content'):
-                    st.write(chunk['choices'][0]['delta'].get('content'), end='', flush=True)
-        except Exception as e:
-            st.write(e)
+        st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
+        placeholder = st.empty()
+        typed_text = ''
+        for chunk in response:
+            if chunk['choices'][0]['delta'].get('content'):
+                typed_text += chunk['choices'][0]['delta'].get('content')
+                with placeholder.container():
+                    st.write(typed_text)
+                placeholder.empty()
+    except Exception as e:
+        st.write(e)
