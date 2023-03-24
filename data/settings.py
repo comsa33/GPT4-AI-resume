@@ -12,6 +12,21 @@ user_info = [
                     "mbti": "ENTJ"
                 }
             ]
+user_skills = [
+    "python",
+    "tensorflow",
+    "pytorch",
+    "sql",
+    "nosql"
+    "kubernetes",
+    "docker",
+    "fastapi",
+    "flask",
+    "aws",
+    "git",
+    "teamcity",
+    "jenkins"
+]
 educations = [
                 {
                     "name": "전남대학교",

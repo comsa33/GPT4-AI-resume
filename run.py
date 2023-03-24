@@ -23,25 +23,25 @@ st.title('GPT-4 API-base Resume & Self-introduction Creation Service')
 
 with st.sidebar:
     st.markdown("===[GPT 모델설정]===")
-    st.markdown("[OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
+    st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     st.text_input(
-        "Enter your OpenAI API Keys 👇",
+        "OpenAI API Keys 입력 👇",
         "",
         key="API_KEY"
     )
     st.selectbox(
-        "Choose GPT Model 👇",
+        "GPT Model 선택 👇",
         st.session_state.models,
         key="model_name"
     )
     st.slider(
-        'Select Temperature',
+        '창작성 수치를 조절하세요.(1에 가까울 수록 창작성이 높습니다.)',
         0.0, 1.0, 0.7,
         key="temperature"
     )
     st.markdown("===[채용공고 설정]===")
     st.selectbox(
-        "Choose Data 👇",
+        "채용공고 사이트 선택 👇",
         st.session_state.table_names,
         key="table_name"
     )
@@ -50,7 +50,7 @@ if st.session_state.API_KEY:
     openai.api_key = st.session_state.API_KEY
 
 df = funcs.get_data(st.session_state.table_name)
-skills = list(set(sum(df['skill_tags'].tolist(), [])))
+skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
@@ -87,7 +87,7 @@ with st.expander('펼쳐보기'):
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.markdown('(테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.)')
-    col_user1, _, col_user2, _, col_user3 = st.columns([6, 1, 8, 1, 10])
+    col_user1, _, col_user2, _, col_user3 = st.columns([10, 1, 12, 1, 14])
     with col_user1:
         st.markdown('**지원자 기본정보**')
         info_df = pd.DataFrame(settings.user_info)
@@ -103,14 +103,12 @@ with st.expander('펼쳐보기'):
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         my_skills = st.multiselect(
-            '지원자 스킬정보',
-            skills,
-            [])
+            '지원자 스킬정보', skills, settings.user_skills)
     with col_user5:
         my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요', settings.career_achievements)
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-col_ai1, _, col_ai2, _, col_ai3 = st.columns([10, 1, 8, 1, 8])
+col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
 with col_ai1:
     st.text_input(
         'AI가 작성할 글의 주제를 직접입력하세요 👇',
