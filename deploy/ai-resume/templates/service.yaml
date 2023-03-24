@@ -5,10 +5,11 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
 spec:
-  type: {{ .Values.service.type }}
   selector:
     app: {{ .Chart.Name }}
   ports:
   - name: http
     port: {{ .Values.service.port }}
     targetPort: 8501
+  externalIPs:
+  - 210.123.105.183
