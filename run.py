@@ -104,6 +104,14 @@ with st.expander('펼쳐보기'):
     edu_df = pd.DataFrame(
         [
             {
+                "name": "전남대학교",
+                "major": "시각디자인",
+                "start_dt": "2003.03",
+                "end_dt": "2012.02",
+                "status": "졸업",
+                "kind": "학사",
+            },
+            {
                 "name": "고려사이버대학교",
                 "major": "인공지능",
                 "start_dt": "2020.03",
@@ -131,6 +139,27 @@ with st.expander('펼쳐보기'):
                 "position": "대표",
                 "start_dt": "2017.08",
                 "end_dt": "2020.08"
+            },
+            {
+                "name": "고파토익어학원",
+                "department": "",
+                "position": "대표",
+                "start_dt": "2014.11",
+                "end_dt": "2016.06",
+            },
+            {
+                "name": "세계외국어학원",
+                "department": "토익부",
+                "position": "토익 전임 강사",
+                "start_dt": "2013.03",
+                "end_dt": "2014.10",
+            },
+            {
+                "name": "이은식어학원",
+                "department": "",
+                "position": "토익 강사",
+                "start_dt": "2011.05",
+                "end_dt": "2012.05",
             }
         ]
     )
@@ -139,7 +168,21 @@ with st.expander('펼쳐보기'):
     my_skills = st.multiselect(
         '- 지원자 스킬정보',
         skills,
-        [])
+        [
+            "Python",
+            "Tensorflow",
+            "Pytorch",
+            "SQL",
+            "NoSQL",
+            "Kubernetes",
+            "Docker",
+            "FastApi",
+            "Flask",
+            "AWS",
+            "Git",
+            "TeamCity",
+            "Jenkins"
+        ])
 
     my_achievements = st.text_area(
         '지원자 경력기술서 및 성과내용',
@@ -198,6 +241,6 @@ with st.expander('펼쳐보기'):
             st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
             for chunk in response:
                 if chunk['choices'][0]['delta'].get('content'):
-                    print(chunk['choices'][0]['delta'].get('content'), end='', flush=True)
+                    st.write(chunk['choices'][0]['delta'].get('content'), end='', flush=True)
         except Exception as e:
             st.write(e)
