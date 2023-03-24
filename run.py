@@ -223,7 +223,7 @@ if st.button('글쓰기'):
             ],
             stream=True,
         )
-        st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
+        st.markdown(f"### AI 추천 {st.session_state.writing_type}")
         placeholder = st.empty()
         typed_text = ''
         for chunk in response:
@@ -231,6 +231,5 @@ if st.button('글쓰기'):
                 typed_text += chunk['choices'][0]['delta'].get('content')
                 with placeholder.container():
                     st.write(typed_text)
-                placeholder.empty()
     except Exception as e:
         st.write(e)
