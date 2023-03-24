@@ -6,10 +6,9 @@ metadata:
     app: {{ .Chart.Name }}
 spec:
   type: {{ .Values.service.type }}
-  ports:
-  - port: {{ .Values.service.port }}
-    targetPort: 8501
-    protocol: TCP
-    nodePort: 31421
   selector:
     app: {{ .Chart.Name }}
+  ports:
+  - name: http
+    port: {{ .Values.service.port }}
+    targetPort: 8501

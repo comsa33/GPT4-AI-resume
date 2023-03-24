@@ -11,5 +11,5 @@ image:
   tag: ""
 
 service:
-  type: NodePort
-  port: 8501
+  type: LoadBalancer
+  port: 80
