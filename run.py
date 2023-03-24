@@ -5,6 +5,7 @@ import openai
 import pandas as pd
 
 import core.functions as funcs
+from data import settings
 
 
 
@@ -87,122 +88,54 @@ with st.expander('펼쳐보기'):
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.markdown('   (필드박스를 더블클릭하면 정보를 수정할 수 있습니다.)')
-    st.markdown('지원자 기본정보')
-    info_df = pd.DataFrame(
-        [
-            {
-                "fullname": "이루오",
-                "birthday": "1985.01.10",
-                "sex": "male",
-                "mbti": "ENTJ"
-            }
-        ]
-    )
-    edited_info_df = st.experimental_data_editor(info_df)
-
-    st.markdown('지원자 학력정보')
-    edu_df = pd.DataFrame(
-        [
-            {
-                "name": "전남대학교",
-                "major": "시각디자인",
-                "start_dt": "2003.03",
-                "end_dt": "2012.02",
-                "status": "졸업",
-                "kind": "학사",
-            },
-            {
-                "name": "고려사이버대학교",
-                "major": "인공지능",
-                "start_dt": "2020.03",
-                "end_dt": "2023.08",
-                "status": "재학",
-                "kind": "학사"
-            }
-    ]
-    )
-    edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
-
-    st.markdown('지원자 경력정보')
-    career_df = pd.DataFrame(
-        [
-            {
-                "name": "그래이비랩",
-                "department": "기업부설연구소 Ai lab.",
-                "position": "Ai/Ml engineer Part Lead",
-                "start_dt": "2022.05",
-                "end_dt": "재직중"
-            },
-            {
-                "name": "토익쉽어학원",
-                "department": "",
-                "position": "대표",
-                "start_dt": "2017.08",
-                "end_dt": "2020.08"
-            },
-            {
-                "name": "고파토익어학원",
-                "department": "",
-                "position": "대표",
-                "start_dt": "2014.11",
-                "end_dt": "2016.06",
-            },
-            {
-                "name": "세계외국어학원",
-                "department": "토익부",
-                "position": "토익 전임 강사",
-                "start_dt": "2013.03",
-                "end_dt": "2014.10",
-            },
-            {
-                "name": "이은식어학원",
-                "department": "",
-                "position": "토익 강사",
-                "start_dt": "2011.05",
-                "end_dt": "2012.05",
-            }
-        ]
-    )
-    edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
-
-    my_skills = st.multiselect(
-        '지원자 스킬정보',
-        skills,
-        [])
-
-    my_achievements = st.text_area(
-        '지원자 경력기술서 및 성과내용',
-    '''1. B2B 서비스를 위한 딥러닝 분류 서비스 연구 및 웹 앱 개발
-    - 문서 간 토픽모델링을 위한 LDA 분석 및 시각화
-    - 텍스트 간 유사 범주 어휘 분석을 위해 PCA/t-SNE 분석 적용 및 시각화
-    - 모델 성능 평가를 위한 10,000건의 테스트 데이터 구성
-    - zero-shot classification과 gpt-3 모델 fine-tuning
-    - 타 부서 업무 협업 웹앱 제공(streamlit 사용하여 DL 모델 서빙)'''
-        )
+    col_user1, _, col_user2, _, col_user3 = st.cols([4, 1, 4, 1, 4])
+    with col_user1:
+        st.markdown('지원자 기본정보')
+        info_df = pd.DataFrame(settings.user_info)
+        edited_info_df = st.experimental_data_editor(info_df)
+    with col_user2:
+        st.markdown('지원자 학력정보')
+        edu_df = pd.DataFrame(settings.educations)
+        edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
+    with col_user3:
+        st.markdown('지원자 경력정보')
+        career_df = pd.DataFrame(settings.career_history)
+        edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
+    col_user4, _, col_user5 = st.cols([4, 1, 4])
+    with col_user4:
+        my_skills = st.multiselect(
+            '지원자 스킬정보',
+            skills,
+            [])
+    with col_user5:
+        my_achievements = st.text_area(settings.career_achievements)
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-st.text_input(
-    'AI가 작성할 글의 주제를 직접입력하세요 👇',
-    '본인이 지금까지 살아오면서 가장 성취감을 느꼈던 경험(또는 성과)를 구체적으로 기술해 주시기 바랍니다.',
-    key='writing_type1'
-    )
-st.session_state.radio_disabled = True
-if not st.session_state.writing_type1:
-    st.session_state.radio_disabled = False
-st.radio(
-    "AI가 작성할 글을 선택하세요 👇",
-    ('자기소개', '지원동기', '나의 장단점'),
-    key="writing_type2",
-    disabled=st.session_state.radio_disabled
-    )
-if not st.session_state.writing_type1:
-    subject = st.session_state.writing_type2
-else:
-    subject = st.session_state.writing_type1
-
-min_letter, max_letter = st.slider(
-    '최소, 최대 글자수를 선택하세요 👇',
-    100, 1000, (400, 600))
+col_ai1, _, col_ai2, _, col_ai3 = st.cols([4, 1, 4, 1, 4])
+with col_ai1:
+    st.text_input(
+        'AI가 작성할 글의 주제를 직접입력하세요 👇',
+        '본인이 지금까지 살아오면서 가장 성취감을 느꼈던 경험(또는 성과)를 구체적으로 기술해 주시기 바랍니다.',
+        key='writing_type1'
+        )
+with col_ai2:
+    st.session_state.radio_disabled = True
+    if not st.session_state.writing_type1:
+        st.session_state.radio_disabled = False
+    st.radio(
+        "AI가 작성할 글을 선택하세요 👇 (활성화를 하려면 위 주제를 입력하는 박스의 글을 지우세요.)",
+        ('자기소개', '지원동기', '나의 장단점'),
+        key="writing_type2",
+        disabled=st.session_state.radio_disabled
+        )
+    if not st.session_state.writing_type1:
+        subject = st.session_state.writing_type2
+    else:
+        subject = st.session_state.writing_type1
+with col_ai3:
+    min_letter, max_letter = st.slider(
+        '최소, 최대 글자수를 선택하세요 👇',
+        100, 1000, (400, 600))
 
 jp_desc = f"""
 - 회사이름: {company_name}
@@ -219,35 +152,32 @@ user_desc = f"""
 - 내 경력기술서 및 성과: {my_achievements}"""
 prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
-회사의 가치, 문화, 비즈니스 및 기대하는 역량에 대한 이해를 토대로 작성하세요.
-지나치게 길거나 어려운 문장은 피하세요. 간결하고 명확한 문장으로 긍정적인 이미지를 전달하며 읽기 쉽게 작성하세요.
-개인적인 이야기와 성과를 통해 지원자의 독특한 가치를 증명할 수 있도록 작성하세요.
-경험과 역량을 설명할 때 구체적인 예시를 들어서 설명하세요. 사례를 통해 지원자가 실제로 어떤 업무를 수행했는지 보여주어 신뢰성을 높은 글을 작성하세요.
-존대말, 겸손한 표현 및 적절한 경어를 사용하여 전문성을 보여주세요. 지나친 자신감이나 거만한 표현은 피하세요.
-한국어와 markdown 언어로 작성하세요."""
+{settings.prompt_default}"""
 
-if st.button('글쓰기'):
-    try:
-        response = openai.ChatCompletion.create(
-            model=st.session_state.model_name,
-            temperature=st.session_state.temperature,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                {"role": "assistant", "content": "네, 알겠습니다."},
-                {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                {"role": "assistant", "content": "네, 알겠습니다."},
-                {"role": "user", "content": f"{prompt_msg}"}
-            ],
-            stream=True,
-        )
-        st.markdown(f"### AI 추천 {subject}")
-        placeholder = st.empty()
-        typed_text = ''
-        for chunk in response:
-            if chunk['choices'][0]['delta'].get('content'):
-                typed_text += chunk['choices'][0]['delta'].get('content')
-                with placeholder.container():
-                    st.write(typed_text)
-    except Exception as e:
-        st.write(e)
+_, col_center, _ = st.cols([1, 3, 1])
+with col_center:
+    if st.button('글쓰기'):
+        try:
+            response = openai.ChatCompletion.create(
+                model=st.session_state.model_name,
+                temperature=st.session_state.temperature,
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                    {"role": "assistant", "content": "네, 알겠습니다."},
+                    {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                    {"role": "assistant", "content": "네, 알겠습니다."},
+                    {"role": "user", "content": f"{prompt_msg}"}
+                ],
+                stream=True,
+            )
+            st.markdown(f"### AI 추천 {subject}")
+            placeholder = st.empty()
+            typed_text = ''
+            for chunk in response:
+                if chunk['choices'][0]['delta'].get('content'):
+                    typed_text += chunk['choices'][0]['delta'].get('content')
+                    with placeholder.container():
+                        st.write(typed_text)
+        except Exception as e:
+            st.write(e)
