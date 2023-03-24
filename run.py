@@ -57,15 +57,15 @@ with st.expander('펼쳐보기'):
     col1, col2 = st.columns([1, 2])
     with col1:
         st.text_input(
-            "- 원하는 직무를 검색하세요 👇",
+            "원하는 직무를 검색하세요 👇",
             "데이터 엔지니어",
             key="search_term"
         )
-        st.markdown(f"- 채용공고 중 검색결과")
+        st.markdown(f"**채용공고 검색결과**")
         temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
         st.dataframe(temp_df)
         st.selectbox(
-                "- 채용공고 인덱스를 선택하세요 👇",
+                "채용공고 인덱스를 선택하세요 👇",
                 temp_df.index.tolist(),
                 key="jp_index"
             )
@@ -80,38 +80,37 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
-            st.markdown('채용공고 상세정보')
-            st.markdown("   (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)")
+            st.markdown('**채용공고 상세정보** (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)')
             st.checkbox("표 넓게보기", value=False, key="use_container_width")
             st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
-    st.markdown('   (필드박스를 더블클릭하면 정보를 수정할 수 있습니다.)')
-    col_user1, _, col_user2, _, col_user3 = st.columns([4, 1, 4, 1, 4])
+    st.markdown('(테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.)')
+    col_user1, _, col_user2, _, col_user3 = st.columns([4, 1, 6, 1, 8])
     with col_user1:
-        st.markdown('지원자 기본정보')
+        st.markdown('**지원자 기본정보**')
         info_df = pd.DataFrame(settings.user_info)
         edited_info_df = st.experimental_data_editor(info_df)
     with col_user2:
-        st.markdown('지원자 학력정보')
+        st.markdown('**지원자 학력정보**')
         edu_df = pd.DataFrame(settings.educations)
         edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
     with col_user3:
-        st.markdown('지원자 경력정보')
+        st.markdown('**지원자 경력정보**')
         career_df = pd.DataFrame(settings.career_history)
         edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
-    col_user4, _, col_user5 = st.columns([4, 1, 4])
+    col_user4, _, col_user5 = st.columns([6, 1, 8])
     with col_user4:
         my_skills = st.multiselect(
             '지원자 스킬정보',
             skills,
             [])
     with col_user5:
-        my_achievements = st.text_area(settings.career_achievements)
+        my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요', settings.career_achievements)
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-col_ai1, _, col_ai2, _, col_ai3 = st.columns([4, 1, 4, 1, 4])
+col_ai1, _, col_ai2, _, col_ai3 = st.columns([8, 1, 6, 1, 6])
 with col_ai1:
     st.text_input(
         'AI가 작성할 글의 주제를 직접입력하세요 👇',
@@ -155,8 +154,8 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {settings.prompt_default}"""
 
 _, col_center, _ = st.columns([1, 3, 1])
-with col_center:
-    if st.button('글쓰기'):
+if st.button('글 생성하기'):
+    with col_center:
         try:
             response = openai.ChatCompletion.create(
                 model=st.session_state.model_name,
