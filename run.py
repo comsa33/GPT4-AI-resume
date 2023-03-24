@@ -54,7 +54,7 @@ skills = list(set(sum(df['skill_tags'].tolist(), [])))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
-    col1, col2 = st.columns([1, 2])
+    col1, _, col2 = st.columns([8, 1, 14])
     with col1:
         st.text_input(
             "원하는 직무를 검색하세요 👇",
@@ -87,7 +87,7 @@ with st.expander('펼쳐보기'):
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.markdown('(테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.)')
-    col_user1, _, col_user2, _, col_user3 = st.columns([4, 1, 6, 1, 8])
+    col_user1, _, col_user2, _, col_user3 = st.columns([6, 1, 8, 1, 10])
     with col_user1:
         st.markdown('**지원자 기본정보**')
         info_df = pd.DataFrame(settings.user_info)
@@ -100,7 +100,7 @@ with st.expander('펼쳐보기'):
         st.markdown('**지원자 경력정보**')
         career_df = pd.DataFrame(settings.career_history)
         edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
-    col_user4, _, col_user5 = st.columns([6, 1, 8])
+    col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         my_skills = st.multiselect(
             '지원자 스킬정보',
@@ -110,7 +110,7 @@ with st.expander('펼쳐보기'):
         my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요', settings.career_achievements)
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-col_ai1, _, col_ai2, _, col_ai3 = st.columns([8, 1, 6, 1, 6])
+col_ai1, _, col_ai2, _, col_ai3 = st.columns([10, 1, 8, 1, 8])
 with col_ai1:
     st.text_input(
         'AI가 작성할 글의 주제를 직접입력하세요 👇',
@@ -153,7 +153,7 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
 {settings.prompt_default}"""
 
-_, col_center, _ = st.columns([1, 3, 1])
+_, col_center, _ = st.columns([1, 6, 1])
 if st.button('글 생성하기'):
     with col_center:
         try:
