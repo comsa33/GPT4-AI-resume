@@ -13,19 +13,7 @@ user_info = [
                 }
             ]
 user_skills = [
-    "python",
-    "tensorflow",
-    "pytorch",
-    "sql",
-    "nosql"
-    "kubernetes",
-    "docker",
-    "fastapi",
-    "flask",
-    "aws",
-    "git",
-    "teamcity",
-    "jenkins"
+    "python"
 ]
 educations = [
                 {

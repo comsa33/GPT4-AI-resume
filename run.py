@@ -89,23 +89,23 @@ with st.expander('펼쳐보기'):
     st.markdown('(테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.)')
     col_user1, _, col_user2, _, col_user3 = st.columns([10, 1, 12, 1, 14])
     with col_user1:
-        st.markdown('**지원자 기본정보**')
+        st.markdown('**지원자 기본정보** 👇')
         info_df = pd.DataFrame(settings.user_info)
         edited_info_df = st.experimental_data_editor(info_df)
     with col_user2:
-        st.markdown('**지원자 학력정보**')
+        st.markdown('**지원자 학력정보** 👇')
         edu_df = pd.DataFrame(settings.educations)
         edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
     with col_user3:
-        st.markdown('**지원자 경력정보**')
+        st.markdown('**지원자 경력정보** 👇')
         career_df = pd.DataFrame(settings.career_history)
         edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         my_skills = st.multiselect(
-            '지원자 스킬정보', skills, settings.user_skills)
+            '지원자 스킬정보를 검색/입력하세요 👇', skills, settings.user_skills)
     with col_user5:
-        my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요', settings.career_achievements)
+        my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요 👇', settings.career_achievements)
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
 col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
