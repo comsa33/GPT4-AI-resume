@@ -176,6 +176,6 @@ if st.button('글 생성하기'):
                     typed_text += chunk['choices'][0]['delta'].get('content')
                     with placeholder.container():
                         st.write(typed_text)
-            st.download_button(f'AI_{subject} 다운로드', typed_text)
+            st.download_button(f'결과물 다운로드', typed_text)
         except Exception as e:
             st.write(e)
