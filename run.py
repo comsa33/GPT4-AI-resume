@@ -198,7 +198,6 @@ with st.expander('펼쳐보기'):
             st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
             for chunk in response:
                 if chunk['choices'][0]['delta'].get('content'):
-                    st.write(chunk['choices'][0]['delta'].get('content'), end='', unsafe_allow_html=True)
-                    sys.stdout.flush()
+                    print(chunk['choices'][0]['delta'].get('content'), end='', flush=True)
         except Exception as e:
             st.write(e)
