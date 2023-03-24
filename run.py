@@ -1,4 +1,4 @@
-import time
+import sys
 
 import streamlit as st
 import openai
@@ -196,11 +196,9 @@ with st.expander('펼쳐보기'):
                 stream=True,
             )
             st.markdown(f"### AI 추천 {st.session_state.writing_type} 결과")
-            typed_string = ''
             for chunk in response:
                 if chunk['choices'][0]['delta'].get('content'):
-                    typed_string += chunk['choices'][0]['delta'].get('content')
-                    st.write(typed_string, end='', unsafe_allow_html=True)
-                    time.sleep(0.1)
+                    st.write(chunk['choices'][0]['delta'].get('content'), end='', unsafe_allow_html=True)
+                    sys.stdout.flush()
         except Exception as e:
             st.write(e)
