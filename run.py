@@ -79,7 +79,7 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
-            st.markdown('- 채용공고 상세정보')
+            st.markdown('채용공고 상세정보')
             st.markdown("   (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)")
             st.checkbox("표 넓게보기", value=False, key="use_container_width")
             st.dataframe(posting, use_container_width=st.session_state.use_container_width)
@@ -87,7 +87,7 @@ with st.expander('펼쳐보기'):
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.markdown('   (필드박스를 더블클릭하면 정보를 수정할 수 있습니다.)')
-    st.markdown('- 지원자 기본정보')
+    st.markdown('지원자 기본정보')
     info_df = pd.DataFrame(
         [
             {
@@ -100,7 +100,7 @@ with st.expander('펼쳐보기'):
     )
     edited_info_df = st.experimental_data_editor(info_df)
 
-    st.markdown('- 지원자 학력정보')
+    st.markdown('지원자 학력정보')
     edu_df = pd.DataFrame(
         [
             {
@@ -123,7 +123,7 @@ with st.expander('펼쳐보기'):
     )
     edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
 
-    st.markdown('- 지원자 경력정보')
+    st.markdown('지원자 경력정보')
     career_df = pd.DataFrame(
         [
             {
@@ -166,7 +166,7 @@ with st.expander('펼쳐보기'):
     edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
 
     my_skills = st.multiselect(
-        '- 지원자 스킬정보',
+        '지원자 스킬정보',
         skills,
         [])
 
@@ -181,11 +181,28 @@ with st.expander('펼쳐보기'):
         )
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-st.radio(
-    "- AI가 작성할 글을 선택하세요 👇",
-    ('자기소개', '지원동기', '나의 장단점'),
-    key="writing_type"
+st.text_input(
+    'AI가 작성할 글의 주제를 직접입력하세요 👇',
+    '본인이 지금까지 살아오면서 가장 성취감을 느꼈던 경험(또는 성과)를 구체적으로 기술해 주시기 바랍니다.',
+    key='writing_type1'
     )
+st.session_state.radio_disabled = True
+if not st.session_state.writing_type1:
+    st.session_state.radio_disabled = False
+st.radio(
+    "AI가 작성할 글을 선택하세요 👇",
+    ('자기소개', '지원동기', '나의 장단점'),
+    key="writing_type2",
+    disabled=st.session_state.radio_disabled
+    )
+if not st.session_state.writing_type1:
+    subject = st.session_state.writing_type2
+else:
+    subject = st.session_state.writing_type1
+
+min_letter, max_letter = st.slider(
+    '최소, 최대 글자수를 선택하세요 👇',
+    100, 1000, (400, 600))
 
 jp_desc = f"""
 - 회사이름: {company_name}
@@ -200,7 +217,8 @@ user_desc = f"""
 - 내 보유 스킬: {my_skills}
 - 내 경력 정보: {edited_career_df.to_dict()}
 - 내 경력기술서 및 성과: {my_achievements}"""
-prompt_msg = f"""회사에 이력서와 함께 제출할 {st.session_state.writing_type}에 대한 글을 작성하세요.(600~1000자 사이).
+prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
+{min_letter}~{max_letter} 글자 사이로 작성하세요.
 회사의 가치, 문화, 비즈니스 및 기대하는 역량에 대한 이해를 토대로 작성하세요.
 지나치게 길거나 어려운 문장은 피하세요. 간결하고 명확한 문장으로 긍정적인 이미지를 전달하며 읽기 쉽게 작성하세요.
 개인적인 이야기와 성과를 통해 지원자의 독특한 가치를 증명할 수 있도록 작성하세요.
@@ -223,7 +241,7 @@ if st.button('글쓰기'):
             ],
             stream=True,
         )
-        st.markdown(f"### AI 추천 {st.session_state.writing_type}")
+        st.markdown(f"### AI 추천 {subject}")
         placeholder = st.empty()
         typed_text = ''
         for chunk in response:
