@@ -168,21 +168,7 @@ with st.expander('펼쳐보기'):
     my_skills = st.multiselect(
         '- 지원자 스킬정보',
         skills,
-        [
-            "Python",
-            "Tensorflow",
-            "Pytorch",
-            "SQL",
-            "NoSQL",
-            "Kubernetes",
-            "Docker",
-            "FastApi",
-            "Flask",
-            "AWS",
-            "Git",
-            "TeamCity",
-            "Jenkins"
-        ])
+        ["Python", "Tensorflow", "Pytorch", "SQL", "NoSQL", "Kubernetes", "Docker", "FastApi", "Flask", "AWS", "Git", "TeamCity", "Jenkins"])
 
     my_achievements = st.text_area(
         '지원자 경력기술서 및 성과내용',
