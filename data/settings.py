@@ -8,7 +8,7 @@ my_secret = "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"
 
 user_info = [
                 {
-                    "fullname": "이루오",
+                    "fullname": "이코딩",
                     "birthday": "1988.01.01",
                     "sex": "male",
                     "mbti": "ENTJ"

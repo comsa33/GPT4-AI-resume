@@ -17,9 +17,9 @@ st.set_page_config(
 )
 
 st.session_state.table_names = funcs.table_names
-st.session_state.models = ["gpt-3.5-turbo", "gpt-4"]
+st.session_state.models = ["gpt-4", "gpt-3.5-turbo"]
 
-st.title('GPT-4 API-base Résumé & Cover letter Creation Service')
+st.title('GPT-4 채용공고별 자소서 가이드')
 st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
@@ -46,7 +46,7 @@ with st.sidebar:
         st.session_state.table_names,
         key="table_name"
     )
-    st.markdown(
+    st.caption(
     """
 
 
@@ -78,6 +78,7 @@ with st.expander('펼쳐보기'):
             key="search_term"
         )
         st.markdown(f"**채용공고 검색결과**")
+        st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
         st.dataframe(temp_df)
         st.selectbox(
@@ -96,13 +97,14 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
-            st.markdown('지원하고자 하는 **채용공고 상세정보** (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)')
+            st.markdown('지원하고자 하는 **채용공고 상세정보**') 
+            st.caption('필드박스를 더블클릭해서 세부내용 확인하기')
             st.checkbox("표 넓게보기", value=True, key="use_container_width")
             st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
-    st.markdown('(테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.)')
+    st.caption('테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
     col_user1, _, col_user2, _, col_user3 = st.columns([10, 1, 12, 1, 14])
     with col_user1:
         st.markdown('**지원자 기본정보** 👇')
@@ -176,7 +178,7 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 _, col_center, _ = st.columns([1, 6, 1])
 if st.button('글 생성하기'):
     with col_center:
-        st.write("글 작성이 끝나면 다운로드 버튼이 나타납니다.")
+        st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
         try:
             response = openai.ChatCompletion.create(
                 model=st.session_state.model_name,
