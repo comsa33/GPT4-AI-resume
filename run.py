@@ -61,9 +61,9 @@ with st.sidebar:
     """
     )
 
-if st.session_state.API_KEY:
+# if st.session_state.API_KEY:
     # openai.api_key = st.session_state.API_KEY
-    openai.api_key = settings.my_secret
+openai.api_key = settings.my_secret
 
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
