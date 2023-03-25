@@ -19,13 +19,13 @@ st.set_page_config(
 st.session_state.table_names = funcs.table_names
 st.session_state.models = ["gpt-3.5-turbo", "gpt-4"]
 
-st.title('GPT-4 API-base Resume & Self-introduction Creation Service')
+st.title('GPT-4 API-base Résumé & Cover letter Creation Service')
 
 with st.sidebar:
     st.markdown("===[GPT 모델설정]===")
     st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     st.text_input(
-        "OpenAI API Keys 입력 👇",
+        "OpenAI API Keys 입력(필수) 👇",
         "",
         key="API_KEY"
     )
@@ -57,7 +57,7 @@ with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 14])
     with col1:
         st.text_input(
-            "원하는 직무를 검색하세요 👇",
+            "원하는 직무를 검색하세요(키워드 부분 검색 가능) 👇",
             "데이터 엔지니어",
             key="search_term"
         )
@@ -65,7 +65,7 @@ with st.expander('펼쳐보기'):
         temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
         st.dataframe(temp_df)
         st.selectbox(
-                "채용공고 인덱스를 선택하세요 👇",
+                "지원하고자 하는 채용공고를 선택/입력하세요 (검색결과에서 좌측열 인덱스 번호) 👇",
                 temp_df.index.tolist(),
                 key="jp_index"
             )
@@ -80,8 +80,8 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
-            st.markdown('**채용공고 상세정보** (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)')
-            st.checkbox("표 넓게보기", value=False, key="use_container_width")
+            st.markdown('지원하고자 하는 **채용공고 상세정보** (필드를 더블클릭하면 세부내용을 확인할 수 있습니다.)')
+            st.checkbox("표 넓게보기", value=True, key="use_container_width")
             st.dataframe(posting, use_container_width=st.session_state.use_container_width)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
@@ -110,6 +110,12 @@ with st.expander('펼쳐보기'):
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
 col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
 with col_ai1:
+    st.radio(
+        "언어를 선택하세요 👇",
+        ('한국어', '영어'),
+        key="lang_choice"
+    )
+    lang = f"{st.session_state.lang_choice}와 markdown 스타일로 작성하세요."
     st.text_input(
         'AI가 작성할 글의 주제를 직접입력하세요 👇',
         '본인이 지금까지 살아오면서 가장 성취감을 느꼈던 경험(또는 성과)를 구체적으로 기술해 주시기 바랍니다.',
@@ -154,6 +160,7 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 _, col_center, _ = st.columns([1, 6, 1])
 if st.button('글 생성하기'):
     with col_center:
+        st.write("글 작성이 끝나면 다운로드 버튼이 나타납니다.")
         try:
             response = openai.ChatCompletion.create(
                 model=st.session_state.model_name,
@@ -164,7 +171,7 @@ if st.button('글 생성하기'):
                     {"role": "assistant", "content": "네, 알겠습니다."},
                     {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
                     {"role": "assistant", "content": "네, 알겠습니다."},
-                    {"role": "user", "content": f"{prompt_msg}"}
+                    {"role": "user", "content": f"{prompt_msg}+{lang}"}
                 ],
                 stream=True,
             )
