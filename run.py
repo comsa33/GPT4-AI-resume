@@ -51,6 +51,7 @@ with st.sidebar:
 
 -------------------------
 개발자: 이루오
+이메일: comsa33@kakao.com
 깃허브: https://github.com/comsa33
 블로그: https://ruo.oopy.io/
     """
