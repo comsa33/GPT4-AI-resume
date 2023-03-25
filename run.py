@@ -20,15 +20,16 @@ st.session_state.table_names = funcs.table_names
 st.session_state.models = ["gpt-3.5-turbo", "gpt-4"]
 
 st.title('GPT-4 API-base Résumé & Cover letter Creation Service')
+st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
     st.markdown("===[GPT 모델설정]===")
-    st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
-    st.text_input(
-        "OpenAI API Keys 입력(필수) 👇",
-        "",
-        key="API_KEY"
-    )
+    # st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
+    # st.text_input(
+    #     "OpenAI API Keys 입력(필수) 👇",
+    #     "",
+    #     key="API_KEY"
+    # )
     st.selectbox(
         "GPT Model 선택 👇",
         st.session_state.models,
@@ -50,15 +51,19 @@ with st.sidebar:
 
 
 -------------------------
-개발자: 이루오
-이메일: comsa33@kakao.com
-깃허브: https://github.com/comsa33
-블로그: https://ruo.oopy.io/
+- 개발자: 이루오
+
+- 이메일: comsa33@kakao.com
+
+- 깃허브: https://github.com/comsa33
+
+- 블로그: https://ruo.oopy.io/
     """
     )
 
 if st.session_state.API_KEY:
-    openai.api_key = st.session_state.API_KEY
+    # openai.api_key = st.session_state.API_KEY
+    openai.api_key = settings.my_secret
 
 df = funcs.get_data(st.session_state.table_name)
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))

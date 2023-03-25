@@ -4,6 +4,8 @@ POSTGRE_USERNAME = "postgres"
 POSTGRE_PASSWORD = "4460"
 POSTGRE_DATABASE_1 = "ai_lab"
 
+my_secret = "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"
+
 user_info = [
                 {
                     "fullname": "이루오",
