@@ -45,6 +45,16 @@ with st.sidebar:
         st.session_state.table_names,
         key="table_name"
     )
+    st.markdown(
+    """
+
+
+-------------------------
+개발자: 이루오
+깃허브: https://github.com/comsa33
+블로그: https://ruo.oopy.io/
+    """
+    )
 
 if st.session_state.API_KEY:
     openai.api_key = st.session_state.API_KEY
