@@ -74,6 +74,7 @@ st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를
 with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
+        temp_df = df[['company_name', "position"]]
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
             st.selectbox(
@@ -91,13 +92,12 @@ with st.expander('펼쳐보기'):
             )
         st.markdown(f"**채용공고 검색결과**")
         st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-        temp_df = df[['company_name', "position"]]
-        st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
-        st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
         if st.session_state.position != "선택 없음":
             temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
+        st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
+        st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
         st.dataframe(temp_df)
         st.selectbox(
                 "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
@@ -107,19 +107,18 @@ with st.expander('펼쳐보기'):
             )
 
     with col2:
-        if st.session_state.jp_index:
-            posting = df.iloc[int(st.session_state.jp_index)]
+        posting = df.iloc[int(st.session_state.jp_index)]
 
-            posting_url = settings.wanted_url_prefix+str(posting['id'])
-            company_name = posting['company_name']
-            position = posting['position']
-            requirements = posting['requirements']
-            main_tasks = posting['main_tasks']
-            intro = posting['intro']
+        posting_url = settings.wanted_url_prefix+str(posting['id'])
+        company_name = posting['company_name']
+        position = posting['position']
+        requirements = posting['requirements']
+        main_tasks = posting['main_tasks']
+        intro = posting['intro']
 
-            st.markdown('지원하고자 하는 **채용공고 상세정보**') 
-            st.caption(f':arrow_right: {st.session_state.table_name} 채용공고 링크')
-            st.dataframe(posting, use_container_width=True)
+        st.markdown('지원하고자 하는 **채용공고 상세정보**') 
+        st.caption(f':arrow_right: {st.session_state.table_name} 채용공고 링크')
+        st.dataframe(posting, use_container_width=True)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
