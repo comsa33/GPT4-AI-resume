@@ -150,7 +150,7 @@ with st.expander('펼쳐보기'):
     with col_user5:
         my_achievements = st.text_area(
         '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
-        settings.career_achievements
+        settings.career_achievements,
         help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
 
