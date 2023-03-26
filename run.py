@@ -97,7 +97,7 @@ with st.expander('펼쳐보기'):
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
             st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
-        st.dataframe(temp_df)
+        st.dataframe(temp_df, use_container_width=True)
 
     with col2:
         st.markdown('**채용공고 상세정보**') 
@@ -107,7 +107,7 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
                 key="jp_index"
             )
-        if st.session_state != None:
+        try:
             posting = df.iloc[int(st.session_state.jp_index)]
 
             posting_url = settings.wanted_url_prefix+str(posting['id'])
@@ -116,6 +116,8 @@ with st.expander('펼쳐보기'):
             requirements = posting['requirements']
             main_tasks = posting['main_tasks']
             intro = posting['intro']
+        except TypeError:
+            st.caption("⌗ 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
         st.caption("-------------------------")
         st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
@@ -125,11 +127,11 @@ st.caption("-------------------------")
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
-    col_user1, _, col_user2 = st.columns([4, 1, 10])
+    col_user1, _, col_user2 = st.columns([6, 1, 10])
     with col_user1:
         st.markdown('**지원자 기본정보** 👇')
         info_df = pd.DataFrame(settings.user_info)
-        edited_info_df = st.experimental_data_editor(info_df)
+        edited_info_df = st.experimental_data_editor(info_df, use_container_width=True)
 
         my_skills = st.multiselect(
             '지원자 스킬정보를 검색/입력하세요 👇',
@@ -140,13 +142,13 @@ with st.expander('펼쳐보기'):
     with col_user2:
         st.markdown('**지원자 학력정보** 👇')
         edu_df = pd.DataFrame(settings.educations)
-        edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic")
+        edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic", use_container_width=True)
 
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         st.markdown('**지원자 경력정보** 👇')
         career_df = pd.DataFrame(settings.career_history)
-        edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic")
+        edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic", use_container_width=True)
     with col_user5:
         my_achievements = st.text_area(
         '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
