@@ -98,7 +98,7 @@ with st.expander('펼쳐보기'):
         else:
             temp_df = df[['company_name', "position"]]
         if st.session_state.comp_name != "선택 없음":
-            temp_df = df[df['company_name'].str.contains(st.session_state.comp_name)][['company_name', "position"]]
+            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.caption("-------------------------")
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         st.dataframe(temp_df, use_container_width=True)
