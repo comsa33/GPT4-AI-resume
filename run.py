@@ -64,7 +64,6 @@ with st.sidebar:
 openai.api_key = settings.my_secret
 
 df = funcs.get_data(st.session_state.table_name)
-st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().tolist()
 st.session_state.position_names = ['선택 없음']+df['position'].unique().tolist()
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
@@ -81,9 +80,13 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
+
         if st.session_state.position != "선택 없음":
-            df_filtered_by_postion = df[df['position'].str.contains(st.session_state.position)]
-            st.session_state.comp_names = ['선택 없음']+df_filtered_by_postion['company_name'].unique().tolist()
+            temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
+            st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
+        else:
+            temp_df = df[['company_name', "position"]]
+            st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().tolist()
 
         with col1_sub2:
             st.selectbox(
@@ -93,12 +96,9 @@ with st.expander('펼쳐보기'):
                 key="comp_name"
             )
         
-        if st.session_state.position != "선택 없음":
-            temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
-        else:
-            temp_df = df[['company_name', "position"]]
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
+
         st.caption("-------------------------")
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         st.dataframe(temp_df, use_container_width=True)
