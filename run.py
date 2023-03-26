@@ -72,8 +72,6 @@ st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를
 with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
-        temp_df = df[['company_name', "position"]]
-
         st.markdown(f"**채용공고 검색**")
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
@@ -96,9 +94,9 @@ with st.expander('펼쳐보기'):
             )
         
         if st.session_state.position != "선택 없음":
-            temp_df = temp_df[temp_df['position']==st.session_state.position]
+            temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
         if st.session_state.comp_name != "선택 없음":
-            temp_df = temp_df[temp_df['company_name']==st.session_state.comp_name]
+            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.caption("-------------------------")
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         st.dataframe(temp_df, use_container_width=True)
