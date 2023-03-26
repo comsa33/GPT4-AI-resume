@@ -79,7 +79,7 @@ with st.expander('펼쳐보기'):
             st.selectbox(
                 "직무 검색 👇",
                 position_names,
-                help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다."",
+                help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
         with col1_sub2:
