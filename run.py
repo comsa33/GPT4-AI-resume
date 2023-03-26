@@ -68,7 +68,6 @@ st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().toli
 st.session_state.position_names = ['선택 없음']+df['position'].unique().tolist()
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
-st.caption("-------------------------")
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
@@ -101,6 +100,7 @@ with st.expander('펼쳐보기'):
         st.dataframe(temp_df)
 
     with col2:
+        st.markdown('**채용공고 상세정보**') 
         st.selectbox(
                 "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
                 temp_df.index.tolist(),
@@ -118,7 +118,6 @@ with st.expander('펼쳐보기'):
             intro = posting['intro']
 
         st.caption("-------------------------")
-        st.markdown('지원하고자 하는 **채용공고 상세정보**') 
         st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         st.dataframe(posting, use_container_width=True)
 
