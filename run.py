@@ -23,7 +23,7 @@ st.title('GPT-4 채용공고별 자소서 가이드')
 st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
-    st.markdown("[**GPT 모델설정**])
+    st.markdown("[**GPT 모델설정**]")
     # st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     # st.text_input(
     #     "OpenAI API Keys 입력(필수) 👇",
