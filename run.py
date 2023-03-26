@@ -66,24 +66,41 @@ with st.sidebar:
 openai.api_key = settings.my_secret
 
 df = funcs.get_data(st.session_state.table_name)
+comp_names = ['선택 없음']+df['company_name'].unique().tolist()
+position_names = ['선택 없음']+df['position'].unique().tolist()
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
-    col1, _, col2 = st.columns([8, 1, 14])
+    col1, _, col2 = st.columns([8, 1, 10])
     with col1:
-        st.text_input(
-            "원하는 직무를 검색하세요(키워드 부분 검색 가능) 👇",
-            "데이터 엔지니어",
-            key="search_term"
-        )
+        col1_sub1, col1_sub2 = st.columns(2)
+        with col1_sub1:
+            st.selectbox(
+                "직무 검색 👇",
+                position_names,
+                help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다."",
+                key="position"
+            )
+        with col1_sub2:
+            st.selectbox(
+                "회사 검색 👇",
+                comp_names,
+                help=":grey_question: 지원하고 싶은 회사명을 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
+                key="comp_name"
+            )
         st.markdown(f"**채용공고 검색결과**")
         st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-        temp_df = df[df['position'].str.contains(st.session_state.search_term)][['company_name', "position"]]
+        temp_df = df[['company_name', "position"]]
+        if st.session_state.position not "선택 없음":
+            temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
+        if st.session_state.comp_name not "선택 없음":
+            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.dataframe(temp_df)
         st.selectbox(
-                "지원하고자 하는 채용공고를 선택/입력하세요 (검색결과에서 좌측열 인덱스 번호) 👇",
+                "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
                 temp_df.index.tolist(),
+                help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
                 key="jp_index"
             )
 
@@ -91,6 +108,7 @@ with st.expander('펼쳐보기'):
         if st.session_state.jp_index:
             posting = df.iloc[int(st.session_state.jp_index)]
 
+            posting_url = settings.wanted_url_prefix+posting['id']
             company_name = posting['company_name']
             position = posting['position']
             requirements = posting['requirements']
@@ -98,9 +116,8 @@ with st.expander('펼쳐보기'):
             intro = posting['intro']
 
             st.markdown('지원하고자 하는 **채용공고 상세정보**') 
-            st.caption('필드박스를 더블클릭해서 세부내용 확인하기')
-            st.checkbox("표 넓게보기", value=True, key="use_container_width")
-            st.dataframe(posting, use_container_width=st.session_state.use_container_width)
+            st.caption(f':arrow_right: {st.session_state.table_name} 채용공고 링크')
+            st.dataframe(posting, use_container_width=True)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):

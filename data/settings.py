@@ -5,6 +5,7 @@ POSTGRE_PASSWORD = "4460"
 POSTGRE_DATABASE_1 = "ai_lab"
 
 my_secret = "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"
+wanted_url_prefix = "https://www.wanted.co.kr/wd/"
 
 user_info = [
                 {
