@@ -23,7 +23,7 @@ st.title('GPT-4 채용공고별 자소서 가이드')
 st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
-    st.markdown("===[GPT 모델설정]===")
+    st.markdown("-------[GPT 모델설정]-------")
     # st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     # st.text_input(
     #     "OpenAI API Keys 입력(필수) 👇",
@@ -36,11 +36,12 @@ with st.sidebar:
         key="model_name"
     )
     st.slider(
-        '창작성 수치를 조절하세요.(1에 가까울 수록 창작성이 높습니다.)',
+        '창작성 수치 조절 👇',
         0.0, 1.0, 0.7,
+        help="1에 가까울 수록 창작성이 높습니다.",
         key="temperature"
     )
-    st.markdown("===[채용공고 설정]===")
+    st.markdown("-------[채용공고 설정]-------")
     st.selectbox(
         "채용공고 사이트 선택 👇",
         st.session_state.table_names,
@@ -90,15 +91,16 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 회사명을 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="comp_name"
             )
+        st.caption("-------------------------")
         st.markdown(f"**채용공고 검색결과**")
         st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         if st.session_state.position != "선택 없음":
             temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
-        st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
-        st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
+
         st.dataframe(temp_df)
+        st.caption("-------------------------")
         st.selectbox(
                 "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
                 temp_df.index.tolist(),
@@ -107,17 +109,18 @@ with st.expander('펼쳐보기'):
             )
 
     with col2:
-        posting = df.iloc[int(st.session_state.jp_index)]
+        if st.seesion_state != None:
+            posting = df.iloc[int(st.session_state.jp_index)]
 
-        posting_url = settings.wanted_url_prefix+str(posting['id'])
-        company_name = posting['company_name']
-        position = posting['position']
-        requirements = posting['requirements']
-        main_tasks = posting['main_tasks']
-        intro = posting['intro']
+            posting_url = settings.wanted_url_prefix+str(posting['id'])
+            company_name = posting['company_name']
+            position = posting['position']
+            requirements = posting['requirements']
+            main_tasks = posting['main_tasks']
+            intro = posting['intro']
 
         st.markdown('지원하고자 하는 **채용공고 상세정보**') 
-        st.caption(f':arrow_right: {st.session_state.table_name} 채용공고 링크')
+        st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         st.dataframe(posting, use_container_width=True)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
@@ -194,6 +197,7 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {settings.prompt_default}"""
 
 _, col_center, _ = st.columns([1, 6, 1])
+st.caption("-------------------------")
 if st.button('글 생성하기'):
     with col_center:
         st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
