@@ -67,12 +67,13 @@ df = funcs.get_data(st.session_state.table_name)
 st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().tolist()
 st.session_state.position_names = ['선택 없음']+df['position'].unique().tolist()
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
-temp_df = df[['company_name', "position"]]
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
+        temp_df = df[['company_name', "position"]]
+
         st.markdown(f"**채용공고 검색**")
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
@@ -82,9 +83,9 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
-        if st.session_state.position != "선택 없음":
-            temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
-        st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
+        df_filtered_by_postion = df[df['position'].str.contains(st.session_state.position)]
+        st.session_state.comp_names = ['선택 없음']+df_filtered_by_postion['company_name'].unique().tolist()
+
         with col1_sub2:
             st.selectbox(
                 "회사 검색 👇",
@@ -92,19 +93,20 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 회사명을 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="comp_name"
             )
-        if st.session_state.comp_name != "선택 없음":
-            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         
         if st.button('검색'):
+            if st.session_state.position != "선택 없음":
+                temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
+            if st.session_state.comp_name != "선택 없음":
+                temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
             st.caption("-------------------------")
             st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
             st.dataframe(temp_df, use_container_width=True)
-            temp_df = df[['company_name', "position"]]
 
         else:
             st.caption("-------------------------")
             st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-            st.dataframe(df[['company_name', "position"]], use_container_width=True)
+            st.dataframe(temp_df, use_container_width=True)
 
     with col2:
         st.markdown('**채용공고 상세정보**') 
