@@ -92,9 +92,9 @@ with st.expander('펼쳐보기'):
         st.markdown(f"**채용공고 검색결과**")
         st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         temp_df = df[['company_name', "position"]]
-        if st.session_state.position not "선택 없음":
+        if st.session_state.position != "선택 없음":
             temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
-        if st.session_state.comp_name not "선택 없음":
+        if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.dataframe(temp_df)
         st.selectbox(
