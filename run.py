@@ -157,37 +157,33 @@ with st.expander('펼쳐보기'):
 
 st.caption("-------------------------")
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
-col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
+col_ai1, _, col_ai2= st.columns([20, 1, 10])
 with col_ai1:
+    st.text_input(
+        'AI가 작성할 글의 주제를 직접 입력하세요 👇',
+        '',
+        key='writing_type1',
+        help="자소서의 주제를 직접 입력할 수 있습니다."
+        )
+    st.radio(
+        "AI가 작성할 글을 선택하세요 👇",
+        ('자기소개', '지원동기', '나의 장단점'),
+        key="writing_type2",
+        )
+    if not st.session_state.writing_type1:
+        subject = st.session_state.writing_type2
+    else:
+        subject = st.session_state.writing_type1
+with col_ai2:
+    min_letter, max_letter = st.slider(
+        '최소, 최대 글자수를 선택하세요 👇',
+        100, 1000, (400, 600))
     st.radio(
         "언어를 선택하세요 👇",
         ('한국어', '영어'),
         key="lang_choice"
     )
     lang = f"{st.session_state.lang_choice}와 markdown 스타일로 작성하세요."
-    st.text_input(
-        'AI가 작성할 글의 주제를 직접입력하세요 👇',
-        '본인이 지금까지 살아오면서 가장 성취감을 느꼈던 경험(또는 성과)를 구체적으로 기술해 주시기 바랍니다.',
-        key='writing_type1'
-        )
-with col_ai2:
-    st.session_state.radio_disabled = True
-    if not st.session_state.writing_type1:
-        st.session_state.radio_disabled = False
-    st.radio(
-        "AI가 작성할 글을 선택하세요 👇 (활성화를 하려면 위 주제를 입력하는 박스의 글을 지우세요.)",
-        ('자기소개', '지원동기', '나의 장단점'),
-        key="writing_type2",
-        disabled=st.session_state.radio_disabled
-        )
-    if not st.session_state.writing_type1:
-        subject = st.session_state.writing_type2
-    else:
-        subject = st.session_state.writing_type1
-with col_ai3:
-    min_letter, max_letter = st.slider(
-        '최소, 최대 글자수를 선택하세요 👇',
-        100, 1000, (400, 600))
 st.caption("-------------------------")
 
 jp_desc = f"""
