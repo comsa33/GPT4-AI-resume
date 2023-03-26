@@ -106,6 +106,7 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
                 key="jp_index"
             )
+        st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
 
@@ -115,11 +116,10 @@ with st.expander('펼쳐보기'):
             requirements = posting['requirements']
             main_tasks = posting['main_tasks']
             intro = posting['intro']
+            st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         except TypeError:
             st.caption("⌗ 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
-        st.caption("-------------------------")
-        st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         st.dataframe(posting, use_container_width=True)
 
 st.caption("-------------------------")
