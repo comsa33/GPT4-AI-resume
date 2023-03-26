@@ -109,7 +109,7 @@ with st.expander('펼쳐보기'):
             )
 
     with col2:
-        if st.seesion_state != None:
+        if st.session_state != None:
             posting = df.iloc[int(st.session_state.jp_index)]
 
             posting_url = settings.wanted_url_prefix+str(posting['id'])
