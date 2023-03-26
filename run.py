@@ -83,8 +83,9 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
-        df_filtered_by_postion = df[df['position'].str.contains(st.session_state.position)]
-        st.session_state.comp_names = ['선택 없음']+df_filtered_by_postion['company_name'].unique().tolist()
+        if st.session_state.position != "선택 없음":
+            df_filtered_by_postion = df[df['position'].str.contains(st.session_state.position)]
+            st.session_state.comp_names = ['선택 없음']+df_filtered_by_postion['company_name'].unique().tolist()
 
         with col1_sub2:
             st.selectbox(
@@ -94,19 +95,13 @@ with st.expander('펼쳐보기'):
                 key="comp_name"
             )
         
-        if st.button('검색'):
-            if st.session_state.position != "선택 없음":
-                temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
-            if st.session_state.comp_name != "선택 없음":
-                temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
-            st.caption("-------------------------")
-            st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-            st.dataframe(temp_df, use_container_width=True)
-
-        else:
-            st.caption("-------------------------")
-            st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-            st.dataframe(temp_df, use_container_width=True)
+        if st.session_state.position != "선택 없음":
+            temp_df = temp_df[temp_df['position']==st.session_state.position]
+        if st.session_state.comp_name != "선택 없음":
+            temp_df = temp_df[temp_df['company_name']==st.session_state.comp_name]
+        st.caption("-------------------------")
+        st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
+        st.dataframe(temp_df, use_container_width=True)
 
     with col2:
         st.markdown('**채용공고 상세정보**') 
