@@ -126,32 +126,35 @@ st.caption("-------------------------")
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
-    col_user1, _, col_user2 = st.columns([6, 1, 10])
-    with col_user1:
-        st.markdown('**지원자 기본정보** 👇')
-        info_df = pd.DataFrame(settings.user_info)
-        edited_info_df = st.experimental_data_editor(info_df, use_container_width=True)
+    st.markdown('**지원자 기본정보** 👇')
+    info_df = pd.DataFrame(settings.user_info)
+    edited_info_df = st.experimental_data_editor(info_df, use_container_width=True)
 
-        my_skills = st.multiselect(
-            '지원자 스킬정보를 검색/입력하세요 👇',
-            skills,
-            settings.user_skills,
-            help=":grey_question: 입력시 선택 박스에서 선택하세요."
-            )
-    with col_user2:
-        st.markdown('**지원자 학력정보** 👇')
-        edu_df = pd.DataFrame(settings.educations)
-        edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic", use_container_width=True)
+    st.caption("-------------------------")
+    st.markdown('**지원자 학력정보** 👇')
+    edu_df = pd.DataFrame(settings.educations)
+    edited_edu_df = st.experimental_data_editor(edu_df, num_rows="dynamic", use_container_width=True)
 
+    st.caption("-------------------------")
+    my_skills = st.multiselect(
+        '지원자 스킬정보를 검색/입력하세요 👇',
+        skills,
+        settings.user_skills,
+        help=":grey_question: 입력시 선택 박스에서 선택하세요."
+        )
+    
+    st.caption("-------------------------")
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         st.markdown('**지원자 경력정보** 👇')
         career_df = pd.DataFrame(settings.career_history)
         edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic", use_container_width=True)
     with col_user5:
+        st.markdown('')
         my_achievements = st.text_area(
         '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
         settings.career_achievements,
+        height=140,
         help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
 
@@ -159,16 +162,17 @@ st.caption("-------------------------")
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
 col_ai1, _, col_ai2= st.columns([20, 1, 10])
 with col_ai1:
+    st.markdown('AI가 작성할 글의 주제를 직접 입력하거나 아래 주제 중 하나를 선택할 수 있습니다 👇')
     st.text_input(
-        'AI가 작성할 글의 주제를 직접 입력하세요 👇',
         '',
         key='writing_type1',
-        help="자소서의 주제를 직접 입력할 수 있습니다."
+        label_cisibility="collapsed"
         )
     st.radio(
-        "AI가 작성할 글을 선택하세요 👇",
+        "",
         ('자기소개', '지원동기', '나의 장단점'),
         key="writing_type2",
+        label_cisibility="collapsed"
         )
     if not st.session_state.writing_type1:
         subject = st.session_state.writing_type2
