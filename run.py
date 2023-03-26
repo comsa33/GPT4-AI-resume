@@ -82,6 +82,8 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
+            if st.session_state.position != "선택 없음":
+                temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
             st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
         with col1_sub2:
             st.selectbox(
@@ -90,12 +92,10 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 회사명을 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="comp_name"
             )
+            if st.session_state.comp_name != "선택 없음":
+                temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.caption("-------------------------")
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-        if st.session_state.position != "선택 없음":
-            temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
-        if st.session_state.comp_name != "선택 없음":
-            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
         st.dataframe(temp_df, use_container_width=True)
 
     with col2:
@@ -117,10 +117,10 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
             st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
+            st.dataframe(posting, use_container_width=True)
         except TypeError:
             st.caption("⌗ 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
-        st.dataframe(posting, use_container_width=True)
 
 st.caption("-------------------------")
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
