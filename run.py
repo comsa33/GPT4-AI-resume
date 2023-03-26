@@ -23,7 +23,7 @@ st.title('GPT-4 채용공고별 자소서 가이드')
 st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
-    st.markdown("-------[GPT 모델설정]-------")
+    st.markdown("[**GPT 모델설정**])
     # st.markdown("[나의 OpenAI API keys 확인](https://platform.openai.com/account/api-keys)")
     # st.text_input(
     #     "OpenAI API Keys 입력(필수) 👇",
@@ -31,19 +31,19 @@ with st.sidebar:
     #     key="API_KEY"
     # )
     st.selectbox(
-        "GPT Model 선택 👇",
+        "1. GPT Model 선택 👇",
         st.session_state.models,
         key="model_name"
     )
     st.slider(
-        '창작성 수치 조절 👇',
+        '2. 창작성 수치 조절 👇',
         0.0, 1.0, 0.7,
         help="1에 가까울 수록 창작성이 높습니다.",
         key="temperature"
     )
-    st.markdown("-------[채용공고 설정]-------")
+    st.markdown("[**채용공고 설정**]")
     st.selectbox(
-        "채용공고 사이트 선택 👇",
+        "3. 채용공고 사이트 선택 👇",
         st.session_state.table_names,
         key="table_name"
     )
@@ -73,6 +73,7 @@ with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
         temp_df = df[['company_name', "position"]]
+        st.markdown(f"**채용공고 검색**")
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
             st.selectbox(
@@ -89,23 +90,22 @@ with st.expander('펼쳐보기'):
                 key="comp_name"
             )
         st.caption("-------------------------")
-        st.markdown(f"**채용공고 검색결과**")
-        st.caption('컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
+        st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         if st.session_state.position != "선택 없음":
             temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
+            st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
-
+            st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
         st.dataframe(temp_df)
-        st.caption("-------------------------")
+
+    with col2:
         st.selectbox(
                 "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
                 temp_df.index.tolist(),
                 help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
                 key="jp_index"
             )
-
-    with col2:
         if st.session_state != None:
             posting = df.iloc[int(st.session_state.jp_index)]
 
@@ -116,13 +116,14 @@ with st.expander('펼쳐보기'):
             main_tasks = posting['main_tasks']
             intro = posting['intro']
 
+        st.caption("-------------------------")
         st.markdown('지원하고자 하는 **채용공고 상세정보**') 
         st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         st.dataframe(posting, use_container_width=True)
 
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
-    st.caption('테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
+    st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
     col_user1, _, col_user2, _, col_user3 = st.columns([10, 1, 12, 1, 14])
     with col_user1:
         st.markdown('**지원자 기본정보** 👇')
@@ -139,9 +140,17 @@ with st.expander('펼쳐보기'):
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
         my_skills = st.multiselect(
-            '지원자 스킬정보를 검색/입력하세요 👇', skills, settings.user_skills)
+            '지원자 스킬정보를 검색/입력하세요 👇',
+            skills,
+            settings.user_skills,
+            help=":grey_question: 입력시 선택 박스에서 선택하세요."
+            )
     with col_user5:
-        my_achievements = st.text_area('지원자 경력기술서 및 성과에 대해서 입력하세요 👇', settings.career_achievements)
+        my_achievements = st.text_area(
+        '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
+        settings.career_achievements
+        help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
+        )
 
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
 col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
@@ -175,6 +184,7 @@ with col_ai3:
     min_letter, max_letter = st.slider(
         '최소, 최대 글자수를 선택하세요 👇',
         100, 1000, (400, 600))
+st.caption("-------------------------")
 
 jp_desc = f"""
 - 회사이름: {company_name}
@@ -193,33 +203,33 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
 {settings.prompt_default}"""
 
-_, col_center, _ = st.columns([1, 6, 1])
-st.caption("-------------------------")
-if st.button('글 생성하기'):
-    with col_center:
-        st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
-        try:
-            response = openai.ChatCompletion.create(
-                model=st.session_state.model_name,
-                temperature=st.session_state.temperature,
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                    {"role": "assistant", "content": "네, 알겠습니다."},
-                    {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                    {"role": "assistant", "content": "네, 알겠습니다."},
-                    {"role": "user", "content": f"{prompt_msg}+{lang}"}
-                ],
-                stream=True,
-            )
-            st.markdown(f"### AI 추천 {subject}")
-            placeholder = st.empty()
-            typed_text = ''
-            for chunk in response:
-                if chunk['choices'][0]['delta'].get('content'):
-                    typed_text += chunk['choices'][0]['delta'].get('content')
-                    with placeholder.container():
-                        st.write(typed_text)
-            st.download_button(f'결과물 다운로드', typed_text)
-        except Exception as e:
-            st.write(e)
+with st.container():
+    _, col_center, _ = st.columns([1, 6, 1])
+    if st.button('글 생성하기'):
+        with col_center:
+            st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
+            try:
+                response = openai.ChatCompletion.create(
+                    model=st.session_state.model_name,
+                    temperature=st.session_state.temperature,
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                        {"role": "assistant", "content": "네, 알겠습니다."},
+                        {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                        {"role": "assistant", "content": "네, 알겠습니다."},
+                        {"role": "user", "content": f"{prompt_msg}+{lang}"}
+                    ],
+                    stream=True,
+                )
+                st.markdown(f"### AI 추천 {subject}")
+                placeholder = st.empty()
+                typed_text = ''
+                for chunk in response:
+                    if chunk['choices'][0]['delta'].get('content'):
+                        typed_text += chunk['choices'][0]['delta'].get('content')
+                        with placeholder.container():
+                            st.write(typed_text)
+                st.download_button(f'결과물 다운로드', typed_text)
+            except Exception as e:
+                st.write(e)
