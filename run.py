@@ -31,19 +31,19 @@ with st.sidebar:
     #     key="API_KEY"
     # )
     st.selectbox(
-        "1. GPT Model 선택 👇",
+        "GPT Model 선택 👇",
         st.session_state.models,
         key="model_name"
     )
     st.slider(
-        '2. 창작성 수치 조절 👇',
+        '창작성 수치 조절 👇',
         0.0, 1.0, 0.7,
         help="1에 가까울 수록 창작성이 높습니다.",
         key="temperature"
     )
     st.markdown("[**채용공고 설정**]")
     st.selectbox(
-        "3. 채용공고 사이트 선택 👇",
+        "채용공고 사이트 선택 👇",
         st.session_state.table_names,
         key="table_name"
     )
