@@ -82,6 +82,7 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="position"
             )
+            st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
         with col1_sub2:
             st.selectbox(
                 "회사 검색 👇",
@@ -93,10 +94,8 @@ with st.expander('펼쳐보기'):
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
         if st.session_state.position != "선택 없음":
             temp_df = temp_df[temp_df['position'].str.contains(st.session_state.position)]
-            st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
-            st.session_state.position_names = ['선택 없음']+temp_df['position'].unique().tolist()
         st.dataframe(temp_df, use_container_width=True)
 
     with col2:
