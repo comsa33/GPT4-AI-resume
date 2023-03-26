@@ -166,13 +166,13 @@ with col_ai1:
     st.text_input(
         '',
         key='writing_type1',
-        label_cisibility="collapsed"
+        label_visibility="collapsed"
         )
     st.radio(
         "",
         ('자기소개', '지원동기', '나의 장단점'),
         key="writing_type2",
-        label_cisibility="collapsed"
+        label_visibility="collapsed"
         )
     if not st.session_state.writing_type1:
         subject = st.session_state.writing_type2
