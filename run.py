@@ -68,6 +68,7 @@ st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().toli
 st.session_state.position_names = ['선택 없음']+df['position'].unique().tolist()
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
+st.caption("-------------------------")
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     col1, _, col2 = st.columns([8, 1, 10])
@@ -121,6 +122,7 @@ with st.expander('펼쳐보기'):
         st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
         st.dataframe(posting, use_container_width=True)
 
+st.caption("-------------------------")
 st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
 with st.expander('펼쳐보기'):
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
@@ -152,6 +154,7 @@ with st.expander('펼쳐보기'):
         help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
 
+st.caption("-------------------------")
 st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
 col_ai1, _, col_ai2, _, col_ai3 = st.columns([20, 1, 10, 1, 10])
 with col_ai1:
