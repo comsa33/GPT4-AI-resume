@@ -206,32 +206,33 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {settings.prompt_default}"""
 
 with st.container():
-    _, col_center, _ = st.columns([1, 6, 1])
     if st.button('글 생성하기'):
+        _, col_center, _ = st.columns([1, 6, 1])
         with col_center:
             st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
-            try:
-                response = openai.ChatCompletion.create(
-                    model=st.session_state.model_name,
-                    temperature=st.session_state.temperature,
-                    messages=[
-                        {"role": "system", "content": "You are a helpful assistant."},
-                        {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                        {"role": "assistant", "content": "네, 알겠습니다."},
-                        {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                        {"role": "assistant", "content": "네, 알겠습니다."},
-                        {"role": "user", "content": f"{prompt_msg}+{lang}"}
-                    ],
-                    stream=True,
-                )
-                st.markdown(f"### AI 추천 {subject}")
-                placeholder = st.empty()
-                typed_text = ''
-                for chunk in response:
-                    if chunk['choices'][0]['delta'].get('content'):
-                        typed_text += chunk['choices'][0]['delta'].get('content')
-                        with placeholder.container():
-                            st.write(typed_text)
-                st.download_button(f'결과물 다운로드', typed_text)
-            except Exception as e:
-                st.write(e)
+            with st.container():
+                try:
+                    response = openai.ChatCompletion.create(
+                        model=st.session_state.model_name,
+                        temperature=st.session_state.temperature,
+                        messages=[
+                            {"role": "system", "content": "You are a helpful assistant."},
+                            {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                            {"role": "assistant", "content": "네, 알겠습니다."},
+                            {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                            {"role": "assistant", "content": "네, 알겠습니다."},
+                            {"role": "user", "content": f"{prompt_msg}+{lang}"}
+                        ],
+                        stream=True,
+                    )
+                    st.markdown(f"### AI 추천 {subject}")
+                    placeholder = st.empty()
+                    typed_text = ''
+                    for chunk in response:
+                        if chunk['choices'][0]['delta'].get('content'):
+                            typed_text += chunk['choices'][0]['delta'].get('content')
+                            with placeholder.container():
+                                st.write(typed_text)
+                    st.download_button(f'결과물 다운로드', typed_text)
+                except Exception as e:
+                    st.write(e)
