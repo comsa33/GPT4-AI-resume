@@ -108,7 +108,7 @@ with st.expander('펼쳐보기'):
         if st.session_state.jp_index:
             posting = df.iloc[int(st.session_state.jp_index)]
 
-            posting_url = settings.wanted_url_prefix+posting['id']
+            posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
             requirements = posting['requirements']
