@@ -66,9 +66,9 @@ openai.api_key = settings.my_secret
 df = funcs.get_data(st.session_state.table_name)
 
 pattern = r"([^\[\]\(\)]+)(?:\[[^\[\]]*\])?(?:\([^\(\)]*\))?"
-st.session_state.position_names = list(set(map(
+st.session_state.position_names = ['선택 없음']+list(set(map(
     lambda x: re.search(pattern, x).group(1).strip().lower(),
-    ['선택 없음']+df['position'].unique().tolist()
+    df['position'].unique().tolist()
     )))
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
@@ -88,15 +88,15 @@ with st.expander('펼쳐보기'):
 
         if st.session_state.position != "선택 없음":
             temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
-            st.session_state.comp_names = list(set(map(
+            st.session_state.comp_names = ['선택 없음']+list(set(map(
                 lambda x: re.search(pattern, x).group(1).strip().lower(),
-                ['선택 없음']+temp_df['company_name'].unique().tolist()
+                temp_df['company_name'].unique().tolist()
                 )))
         else:
             temp_df = df[['company_name', "position"]]
-            st.session_state.comp_names = list(set(map(
+            st.session_state.comp_names = ['선택 없음']+list(set(map(
                 lambda x: re.search(pattern, x).group(1).strip().lower(),
-                ['선택 없음']+df['company_name'].unique().tolist()
+                df['company_name'].unique().tolist()
                 )))
 
         with col1_sub2:
