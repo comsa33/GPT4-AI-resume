@@ -1,4 +1,4 @@
-import sys
+import re
 
 import streamlit as st
 import openai
@@ -64,7 +64,12 @@ with st.sidebar:
 openai.api_key = settings.my_secret
 
 df = funcs.get_data(st.session_state.table_name)
-st.session_state.position_names = ['선택 없음']+df['position'].unique().tolist()
+
+pattern = r"([^\[\]\(\)]+)(?:\[[^\[\]]*\])?(?:\([^\(\)]*\))?"
+st.session_state.position_names = list(set(map(
+    lambda x: re.search(pattern, x).group(1).strip().lower(),
+    ['선택 없음']+df['position'].unique().tolist()
+    )))
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
@@ -83,10 +88,16 @@ with st.expander('펼쳐보기'):
 
         if st.session_state.position != "선택 없음":
             temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
-            st.session_state.comp_names = ['선택 없음']+temp_df['company_name'].unique().tolist()
+            st.session_state.comp_names = list(set(map(
+                lambda x: re.search(pattern, x).group(1).strip().lower(),
+                ['선택 없음']+temp_df['company_name'].unique().tolist()
+                )))
         else:
             temp_df = df[['company_name', "position"]]
-            st.session_state.comp_names = ['선택 없음']+df['company_name'].unique().tolist()
+            st.session_state.comp_names = list(set(map(
+                lambda x: re.search(pattern, x).group(1).strip().lower(),
+                ['선택 없음']+df['company_name'].unique().tolist()
+                )))
 
         with col1_sub2:
             st.selectbox(
@@ -95,7 +106,7 @@ with st.expander('펼쳐보기'):
                 help=":grey_question: 지원하고 싶은 회사명을 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
                 key="comp_name"
             )
-        
+
         if st.session_state.comp_name != "선택 없음":
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
 
@@ -157,10 +168,10 @@ with st.expander('펼쳐보기'):
     with col_user5:
         st.markdown('')
         my_achievements = st.text_area(
-        '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
-        settings.career_achievements,
-        height=140,
-        help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
+            '지원자 경력기술서 및 성과에 대해서 입력하세요 👇',
+            settings.career_achievements,
+            height=140,
+            help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
 
 st.caption("-------------------------")
@@ -225,9 +236,9 @@ with st.container():
                         messages=[
                             {"role": "system", "content": "You are a helpful assistant."},
                             {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                            {"role": "assistant", "content": "네, 알겠습니다."},
+                            {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
                             {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                            {"role": "assistant", "content": "네, 알겠습니다."},
+                            {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
                             {"role": "user", "content": f"{prompt_msg}+{lang}"}
                         ],
                         stream=True,
