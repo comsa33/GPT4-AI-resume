@@ -87,7 +87,7 @@ with st.expander('펼쳐보기'):
             )
 
         if st.session_state.position != "선택 없음":
-            temp_df = df[df['position'].str.contains(st.session_state.position)][['company_name', "position"]]
+            temp_df = df[df['position'].str.contains(st.session_state.position, case=False)][['company_name', "position"]]
             st.session_state.comp_names = ['선택 없음']+list(set(map(
                 lambda x: re.search(pattern, x).group(1).strip().lower(),
                 temp_df['company_name'].unique().tolist()
@@ -108,7 +108,7 @@ with st.expander('펼쳐보기'):
             )
 
         if st.session_state.comp_name != "선택 없음":
-            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name)]
+            temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name, case=False)]
 
         st.caption("-------------------------")
         st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
