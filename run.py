@@ -65,12 +65,12 @@ openai.api_key = settings.my_secret
 df = funcs.get_data(st.session_state.table_name)
 
 pattern = r"([^\[\]\(\)]+)(?:\[[^\[\]]*\])?(?:\([^\(\)]*\))?"
-st.session_state.position_names = ['선택 없음']+list(set(map(
-    lambda x: re.search(pattern, x).group(1).strip().lower(),
-    df['position'].unique().tolist()
-    )))
+# st.session_state.position_names = ['선택 없음']+list(set(map(
+#     lambda x: re.search(pattern, x).group(1).strip().lower(),
+#     df['position'].unique().tolist()
+#     )))
 # sort st.session_state.position_names
-st.session_state.position_names.sort(key=lambda x: len(x), reverse=True)
+# st.session_state.position_names.sort(key=lambda x: len(x), reverse=True)
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
@@ -80,10 +80,9 @@ with st.expander('펼쳐보기'):
         st.markdown(f"**채용공고 검색**")
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
-            st.selectbox(
+            st.text_input(
                 "직무 검색 👇",
-                st.session_state.position_names,
-                help=":grey_question: 지원하고 싶은 직무를 직접 선택하거나, 부분을 입력하면 자동완성 됩니다.",
+                help=":grey_question: 지원하고 싶은 직무를 입력하세요.",
                 key="position"
             )
 
@@ -114,6 +113,7 @@ with st.expander('펼쳐보기'):
         st.caption("-------------------------")
         st.caption('지원하고자 하는 채용공고를 ✅선택하세요 👇')
         temp_df['선택'] = [False]*len(temp_df)
+        temp_df = temp_df[['선택', 'company_name', 'position']]
         edited_temp_df = st.experimental_data_editor(temp_df, use_container_width=True)
         # get index no of row whose '선택' column is True
         st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
