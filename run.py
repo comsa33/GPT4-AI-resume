@@ -118,7 +118,11 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
     with col2:
         st.subheader('**채용공고 상세정보**')
         st.caption("-------------------------")
-        try:
+        if edited_temp_df[edited_temp_df['선택']==True].sum().sum() > 1:
+            st.caption('⚠️ 선택된 채용공고가 2개 이상입니다. 1개만 선택해주세요.')
+        elif edited_temp_df[edited_temp_df['선택']==True].sum().sum() == 0:
+            st.caption('⚠️ 선택된 채용공고가 없습니다. 채용공고를 선택해주세요.')
+        else:
             posting = df.iloc[int(st.session_state.jp_index)]
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
@@ -149,11 +153,6 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
 
             application_string = f'<div align="right">&#x27A1; <a href="{posting_url}">지원하기 {st.session_state.table_name} 채용공고 링크</a> </div>'
             st.markdown(application_string, unsafe_allow_html=True)
-
-            # st.dataframe(posting, use_container_width=True)
-        except TypeError and AttributeError:
-            st.caption("⚠️ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
-
 
 st.caption("-------------------------")
 with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정하세요'):
