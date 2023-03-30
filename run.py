@@ -258,5 +258,5 @@ with st.container():
             st.markdown(f"### AI 추천 {subject}")
             st.write(st.session_state.result_text)
             st.download_button('결과물 다운로드', st.session_state.result_text)
-        except NameError:
+        except AttributeError:
             pass
