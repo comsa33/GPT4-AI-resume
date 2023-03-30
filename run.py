@@ -65,16 +65,9 @@ openai.api_key = settings.my_secret
 df = funcs.get_data(st.session_state.table_name)
 
 pattern = r"([^\[\]\(\)]+)(?:\[[^\[\]]*\])?(?:\([^\(\)]*\))?"
-# st.session_state.position_names = ['선택 없음']+list(set(map(
-#     lambda x: re.search(pattern, x).group(1).strip().lower(),
-#     df['position'].unique().tolist()
-#     )))
-# sort st.session_state.position_names
-# st.session_state.position_names.sort(key=lambda x: len(x), reverse=True)
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
-st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
-with st.expander('펼쳐보기'):
+with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
         st.markdown(f"**채용공고 검색**")
@@ -123,13 +116,6 @@ with st.expander('펼쳐보기'):
 
     with col2:
         st.markdown('**채용공고 상세정보**')
-        # st.selectbox(
-        #         "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
-        #         temp_df.index.tolist(),
-        #         help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
-        #         key="jp_index"
-        #     )
-        # st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
             posting_url = settings.wanted_url_prefix+str(posting['id'])
@@ -141,12 +127,11 @@ with st.expander('펼쳐보기'):
             st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
             st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
-            st.caption("⌗ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
+            st.caption("⚠️ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
 
 st.caption("-------------------------")
-st.info('지원자 정보를 자신의 정보에 맞게 수정하세요', icon="ℹ️")
-with st.expander('펼쳐보기'):
+with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정하세요'):
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
     st.markdown('**지원자 기본정보** 👇')
     info_df = pd.DataFrame(settings.user_info)
@@ -181,7 +166,7 @@ with st.expander('펼쳐보기'):
         )
 
 st.caption("-------------------------")
-st.info('AI에게 가이드를 받아보세요', icon="ℹ️")
+st.info('AI에게 가이드를 받아보세요', icon="🤖")
 col_ai1, _, col_ai2= st.columns([20, 1, 10])
 with col_ai1:
     st.markdown('AI가 작성할 글의 주제를 직접 입력하거나 아래 주제 중 하나를 선택할 수 있습니다 👇')
@@ -212,12 +197,16 @@ with col_ai2:
     lang = f"{st.session_state.lang_choice}와 markdown 스타일로 작성하세요."
 st.caption("-------------------------")
 
-jp_desc = f"""
-- 회사이름: {company_name}
-- 채용직무: {position}
-- 직무기술: {requirements}
-- 맡게 될 업무: {main_tasks}
-- 회사에 대한 간단한 소개 및 정보: {intro}"""
+try:
+    jp_desc = f"""
+    - 회사이름: {company_name}
+    - 채용직무: {position}
+    - 직무기술: {requirements}
+    - 맡게 될 업무: {main_tasks}
+    - 회사에 대한 간단한 소개 및 정보: {intro}"""
+except NameError:
+    jp_desc = ''
+
 user_desc = f"""
 - 나의 개인 정보: {edited_info_df.to_dict()}
 - 나의 성향: {edited_info_df.to_dict()['mbti'][0]}
@@ -237,19 +226,22 @@ with st.container():
             st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
             with st.container():
                 try:
-                    response = openai.ChatCompletion.create(
-                        model=st.session_state.model_name,
-                        temperature=st.session_state.temperature,
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant."},
-                            {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                            {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
-                            {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                            {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
-                            {"role": "user", "content": f"{prompt_msg}+{lang}"}
-                        ],
-                        stream=True,
-                    )
+                    if jp_desc:
+                        response = openai.ChatCompletion.create(
+                            model=st.session_state.model_name,
+                            temperature=st.session_state.temperature,
+                            messages=[
+                                {"role": "system", "content": "You are a helpful assistant."},
+                                {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                                {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
+                                {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                                {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
+                                {"role": "user", "content": f"{prompt_msg}+{lang}"}
+                            ],
+                            stream=True,
+                        )
+                    else:
+                        st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
                 except Exception as e:
                     st.write(e)
         st.markdown(f"### AI 추천 {subject}")
