@@ -138,14 +138,14 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
                 st.caption(f'[지원 마감일] **{deadline}**')
                 tab1, tab2, tab3, tab4 = st.tabs(["주요업무", "자격요건", "우대사항", "복리후생"])
                 with tab1:
-                    st.markdown(f'{main_tasks}')
+                    st.caption(f'{main_tasks}')
                     st.caption(f'[필요한 기술]  \n**{required_skills}**')
                 with tab2:
-                    st.markdown(f'{requirements}')
+                    st.caption(f'{requirements}')
                 with tab3:
-                    st.markdown(f'{preferred}')
+                    st.caption(f'{preferred}')
                 with tab4:
-                    st.markdown(f'{benefits}')
+                    st.caption(f'{benefits}')
 
             application_string = f'<div align="right">&#x27A1; <a href="{posting_url}">지원하기 {st.session_state.table_name} 채용공고 링크</a> </div>'
             st.markdown(application_string, unsafe_allow_html=True)
