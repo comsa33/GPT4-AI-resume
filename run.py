@@ -220,10 +220,10 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 
 with st.container():
     st.session_state.typed_text = ''
+    _, col_center, _ = st.columns([1, 6, 1])
     if st.button('글 생성하기'):
-        if jp_desc:
-            _, col_center, _ = st.columns([1, 6, 1])
-            with col_center:
+        with col_center:
+            if jp_desc:
                 st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
                 with st.container():
                     try:
@@ -251,12 +251,13 @@ with st.container():
                                 st.write(st.session_state.typed_text)
                     st.session_state.result_text = st.session_state.typed_text
                     st.download_button('결과물 다운로드', st.session_state.result_text)
-        else:
-            st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
+            else:
+                st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
     else:
-        try:
-            st.markdown(f"### AI 추천 {subject}")
-            st.write(st.session_state.result_text)
-            st.download_button('결과물 다운로드', st.session_state.result_text)
-        except AttributeError:
-            pass
+        with col_center:
+            try:
+                st.markdown(f"### AI 추천 {subject}")
+                st.write(st.session_state.result_text)
+                st.download_button('결과물 다운로드', st.session_state.result_text)
+            except AttributeError:
+                pass
