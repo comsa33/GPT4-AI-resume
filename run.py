@@ -109,8 +109,12 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
         temp_df['선택'] = [False]*len(temp_df)
         temp_df = temp_df[['선택', 'company_name', 'position']]
         edited_temp_df = st.experimental_data_editor(temp_df, use_container_width=True)
-        # get index no of row whose '선택' column is True
         try:
+            # if any row's '선택' column is True
+            if edited_temp_df['선택'].sum() > 0:
+                # change all '선택' column to False
+                edited_temp_df['선택'] = [False]*len(edited_temp_df)
+            # get index no of row whose '선택' column is True
             st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
         except IndexError:
             pass
