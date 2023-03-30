@@ -71,7 +71,7 @@ skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요'):
     col1, _, col2 = st.columns([8, 1, 10])
     with col1:
-        st.markdown(f"**채용공고 검색**")
+        st.subheader("**채용공고 검색**")
         col1_sub1, col1_sub2 = st.columns(2)
         with col1_sub1:
             st.text_input(
@@ -116,7 +116,7 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             pass
 
     with col2:
-        st.markdown('**채용공고 상세정보**')
+        st.subheader('**채용공고 상세정보**')
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
             posting_url = settings.wanted_url_prefix+str(posting['id'])
@@ -125,8 +125,27 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             requirements = posting['requirements']
             main_tasks = posting['main_tasks']
             intro = posting['intro']
-            st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
-            st.dataframe(posting, use_container_width=True)
+            deadline = posting['due_time'] if posting['due_time'] else "상시채용"
+
+            st.markdown(f':arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url})')
+
+            with st.container():
+                st.markdown(f'**{company_name}**')
+                st.caption(intro)
+                st.markdown(f'**{position}**')
+                st.caption(f'**지원 마감일**: {deadline}\n')
+                tab1, tab2, tab3, tab4 = st.tabs(["자격요건", "주요업무", "우대사항", "복리후생"])
+                with tab1:
+                    st.caption(f'**자격요건**\n{requirements}\n')
+                with tab2:
+                    st.caption(f'**주요업무**\n{main_tasks}\n')
+                    st.caption(f'**필요한 기술**\n{", ".join(posting["skill_tags"])}\n')
+                with tab3:
+                    st.caption(f'**우대사항**\n{posting["preferred_points"]}\n')
+                with tab4:
+                    st.caption(f'**복리후생**\n{posting["benefits"]}\n')
+
+            # st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
             st.caption("⚠️ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
