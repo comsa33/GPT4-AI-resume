@@ -119,7 +119,7 @@ with st.expander('펼쳐보기'):
         st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
 
     with col2:
-        st.markdown('**채용공고 상세정보**') 
+        st.markdown('**채용공고 상세정보**')
         # st.selectbox(
         #         "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
         #         temp_df.index.tolist(),
@@ -162,7 +162,7 @@ with st.expander('펼쳐보기'):
         settings.user_skills,
         help=":grey_question: 입력시 선택 박스에서 선택하세요."
         )
-    
+
     st.caption("-------------------------")
     col_user4, _, col_user5 = st.columns([8, 1, 10])
     with col_user4:
