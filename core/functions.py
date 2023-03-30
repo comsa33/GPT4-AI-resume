@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 from sqlalchemy import text
 import streamlit as st
@@ -15,3 +17,8 @@ def get_data(table_name):
     with engine_ailab.connect() as conn:
         fetch = conn.execute(text(query)).fetchall()
     return pd.DataFrame(fetch)
+
+def replace_special_chars(text):
+    pattern = r'(•|-(?!\d)|\d+\.)'
+    replaced_text = re.sub(pattern, ' \n', text)
+    return replaced_text

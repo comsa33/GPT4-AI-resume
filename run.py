@@ -127,13 +127,13 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
-            requirements = posting['requirements'].replace("•", "  \n-")
-            main_tasks = posting['main_tasks'].replace("•", "  \n-")
-            intro = posting['intro'].replace("•", "  \n-")
-            benefits = posting['benefits'].replace("•", "  \n-")
-            preferred = posting['preferred_points'].replace("•", "  \n-")
+            requirements = funcs.replace_special_chars(posting['requirements'])
+            main_tasks = funcs.replace_special_chars(posting['main_tasks'])
+            intro = funcs.replace_special_chars(posting['intro'])
+            benefits = funcs.replace_special_chars(posting['benefits'])
+            preferred = funcs.replace_special_chars(posting['preferred_points'])
             deadline = posting['due_time'] if posting['due_time'] else "상시 채용"
-            required_skills = ", ".join(posting["skill_tags"]) if posting["skill_tags"] else "제공된 정보 없음"
+            required_skills = ", ".join(list(map(lambda x: f'`{x}`', posting["skill_tags"]))) if posting["skill_tags"] else "제공된 정보 없음"
 
             with st.container():
                 st.markdown(f'[채용 기업] **{company_name}**')
