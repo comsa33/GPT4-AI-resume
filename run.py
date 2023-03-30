@@ -256,7 +256,7 @@ with st.container():
     else:
         try:
             st.markdown(f"### AI 추천 {subject}")
-            st.write(st.session_state.typed_text)
-            st.download_button('결과물 다운로드', st.session_state.typed_text)
+            st.write(st.session_state.result_text)
+            st.download_button('결과물 다운로드', st.session_state.result_text)
         except NameError:
             pass
