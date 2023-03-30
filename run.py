@@ -118,9 +118,9 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
     with col2:
         st.subheader('**채용공고 상세정보**')
         st.caption("-------------------------")
-        if edited_temp_df[edited_temp_df['선택']==True].sum().sum() > 1:
+        if edited_temp_df[edited_temp_df['선택']==True].sum() > 1:
             st.caption('⚠️ 선택된 채용공고가 2개 이상입니다. 1개만 선택해주세요.')
-        elif edited_temp_df[edited_temp_df['선택']==True].sum().sum() == 0:
+        elif edited_temp_df[edited_temp_df['선택']==True].sum() == 0:
             st.caption('⚠️ 선택된 채용공고가 없습니다. 채용공고를 선택해주세요.')
         else:
             posting = df.iloc[int(st.session_state.jp_index)]
