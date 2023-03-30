@@ -131,9 +131,6 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             deadline = posting['due_time'] if posting['due_time'] else "상시 채용"
             required_skills = ", ".join(posting["skill_tags"]) if posting["skill_tags"] else "제공된 정보 없음"
 
-            application_string = f'<div align="right">&#x27A1; <a href="{posting_url}">지원하기 {st.session_state.table_name} 채용공고 링크</a> </div>'
-            st.markdown(application_string, unsafe_allow_html=True)
-
             with st.container():
                 st.markdown(f'[채용 기업] **{company_name}**')
                 st.markdown(f'[채용 직무] **{position}**')
@@ -149,6 +146,9 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
                     st.markdown(f'{preferred}')
                 with tab4:
                     st.markdown(f'{benefits}')
+
+            application_string = f'<div align="right">&#x27A1; <a href="{posting_url}">지원하기 {st.session_state.table_name} 채용공고 링크</a> </div>'
+            st.markdown(application_string, unsafe_allow_html=True)
 
             # st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
