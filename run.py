@@ -122,9 +122,9 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
-            requirements = posting['requirements']
-            main_tasks = posting['main_tasks']
-            intro = posting['intro']
+            requirements = posting['requirements'].replace(" • ", "\n• ")
+            main_tasks = posting['main_tasks'].replace(" • ", "\n• ")
+            intro = posting['intro'].replace(" • ", "\n• ")
             deadline = posting['due_time'] if posting['due_time'] else "상시채용"
 
             st.markdown(f':arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url})')
@@ -134,16 +134,16 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
                 st.caption(intro)
                 st.markdown(f'**{position}**')
                 st.caption(f'**지원 마감일**: {deadline}\n')
-                tab1, tab2, tab3, tab4 = st.tabs(["자격요건", "주요업무", "우대사항", "복리후생"])
+                tab1, tab2, tab3, tab4 = st.tabs(["주요업무", "자격요건", "우대사항", "복리후생"])
                 with tab1:
-                    st.caption(f'**자격요건**\n{requirements}\n')
+                    st.markdown(f'**주요업무**\n{main_tasks}\n')
+                    st.markdown(f'**필요한 기술**\n{", ".join(posting["skill_tags"])}\n')
                 with tab2:
-                    st.caption(f'**주요업무**\n{main_tasks}\n')
-                    st.caption(f'**필요한 기술**\n{", ".join(posting["skill_tags"])}\n')
+                    st.markdown(f'**자격요건**\n{requirements}\n')
                 with tab3:
-                    st.caption(f'**우대사항**\n{posting["preferred_points"]}\n')
+                    st.markdown(f'**우대사항**\n{posting["preferred_points"]}\n')
                 with tab4:
-                    st.caption(f'**복리후생**\n{posting["benefits"]}\n')
+                    st.markdown(f'**복리후생**\n{posting["benefits"]}\n')
 
             # st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
