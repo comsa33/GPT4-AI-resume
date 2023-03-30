@@ -19,6 +19,8 @@ def get_data(table_name):
     return pd.DataFrame(fetch)
 
 def replace_special_chars(text):
-    pattern = r'(•|\[|⎻|-(?!\d)|\d+\.)'
-    replaced_text = re.sub(pattern, lambda m: f'  \n{m.group(0)}', text)
+    pattern1 = r'(•|\[|⎻|-(?!\d)|\d+\.)'
+    pattern2 = r'(\])'
+    replaced_text = re.sub(pattern1, lambda m: f'  \n{m.group(0)}', text)
+    replaced_text = re.sub(pattern2, lambda m: f'{m.group(0)}  \n', replaced_text)
     return replaced_text

@@ -63,7 +63,8 @@ with st.sidebar:
     # openai.api_key = st.session_state.API_KEY
 openai.api_key = settings.my_secret
 
-df = funcs.get_data(st.session_state.table_name)
+with st.spinner('데이터 로딩 중...'):
+    df = funcs.get_data(st.session_state.table_name)
 
 pattern = r"([^\[\]\(\)]+)(?:\[[^\[\]]*\])?(?:\([^\(\)]*\))?"
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
