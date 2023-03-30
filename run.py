@@ -132,7 +132,6 @@ with st.expander('펼쳐보기'):
         # st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
-
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
@@ -141,7 +140,7 @@ with st.expander('펼쳐보기'):
             intro = posting['intro']
             st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
             st.dataframe(posting, use_container_width=True)
-        except TypeError:
+        except TypeError and AttributeError:
             st.caption("⌗ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
 
