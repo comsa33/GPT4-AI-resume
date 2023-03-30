@@ -122,9 +122,9 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
-            requirements = posting['requirements'].replace(" • ", "\n• ")
-            main_tasks = posting['main_tasks'].replace(" • ", "\n• ")
-            intro = posting['intro'].replace(" • ", "\n• ")
+            requirements = posting['requirements'].replace(" • ", "\n- ")
+            main_tasks = posting['main_tasks'].replace(" • ", "\n- ")
+            intro = posting['intro'].replace(" • ", "\n- ")
             deadline = posting['due_time'] if posting['due_time'] else "상시채용"
 
             st.markdown(f':arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url})')
