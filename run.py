@@ -223,6 +223,7 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 {settings.prompt_default}"""
 
 with st.container():
+    st.session_state.typed_text = ''
     if st.button('글 생성하기'):
         _, col_center, _ = st.columns([1, 6, 1])
         with col_center:
@@ -246,7 +247,6 @@ with st.container():
                     st.write(e)
         st.markdown(f"### AI 추천 {subject}")
         placeholder = st.empty()
-        st.session_state.typed_text = ''
         for chunk in response:
             if chunk['choices'][0]['delta'].get('content'):
                 st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
