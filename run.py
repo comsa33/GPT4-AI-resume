@@ -253,7 +253,10 @@ with st.container():
                     st.download_button('결과물 다운로드', st.session_state.result_text)
         else:
             st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
-    elif 'st.session_state.result_text' in globals():
-        st.markdown(f"### AI 추천 {subject}")
-        st.write(st.session_state.typed_text)
-        st.download_button('결과물 다운로드', st.session_state.typed_text)
+    else:
+        try:
+            st.markdown(f"### AI 추천 {subject}")
+            st.write(st.session_state.typed_text)
+            st.download_button('결과물 다운로드', st.session_state.typed_text)
+        except NameError:
+            pass
