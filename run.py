@@ -131,7 +131,7 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             deadline = posting['due_time'] if posting['due_time'] else "상시 채용"
             required_skills = ", ".join(posting["skill_tags"]) if posting["skill_tags"] else "제공된 정보 없음"
 
-            st.markdown(f'<div align="right"> :arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url}) </div>', unsafe_allow_html=True)')
+            st.markdown(f'<div align="right"> :arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url}) </div>', unsafe_allow_html=True)
 
             with st.container():
                 st.markdown(f'[채용 기업] **{company_name}**')
@@ -140,14 +140,14 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
                 st.caption(f'[지원 마감일] **{deadline}**')
                 tab1, tab2, tab3, tab4 = st.tabs(["주요업무", "자격요건", "우대사항", "복리후생"])
                 with tab1:
-                    st.markdown(f'**주요업무**  \n{main_tasks}\n')
-                    st.markdown(f'**필요한 기술**  \n{required_skills}')
+                    st.markdown(f'{main_tasks}')
+                    st.caption(f'[필요한 기술]  \n**{required_skills}**')
                 with tab2:
-                    st.markdown(f'**자격요건**  \n{requirements}')
+                    st.markdown(f'{requirements}')
                 with tab3:
-                    st.markdown(f'**우대사항**  \n{preferred}')
+                    st.markdown(f'{preferred}')
                 with tab4:
-                    st.markdown(f'**복리후생**  \n{benefits}')
+                    st.markdown(f'{benefits}')
 
             # st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
