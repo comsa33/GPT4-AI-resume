@@ -117,6 +117,7 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
 
     with col2:
         st.subheader('**채용공고 상세정보**')
+        st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
             posting_url = settings.wanted_url_prefix+str(posting['id'])
@@ -130,13 +131,13 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             deadline = posting['due_time'] if posting['due_time'] else "상시 채용"
             required_skills = ", ".join(posting["skill_tags"]) if posting["skill_tags"] else "제공된 정보 없음"
 
-            st.markdown(f':arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url})')
+            st.markdown(f'<div align="right"> :arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url}) </div>', unsafe_allow_html=True)')
 
             with st.container():
-                st.markdown(f'**[채용 기업] {company_name}**')
-                st.markdown(f'**[직무]: {position}**')
+                st.markdown(f'[채용 기업] **{company_name}**')
+                st.markdown(f'[채용 직무] **{position}**')
                 st.caption(intro)
-                st.caption(f'**지원 마감일**: {deadline}\n')
+                st.caption(f'[지원 마감일] **{deadline}**')
                 tab1, tab2, tab3, tab4 = st.tabs(["주요업무", "자격요건", "우대사항", "복리후생"])
                 with tab1:
                     st.markdown(f'**주요업무**  \n{main_tasks}\n')
