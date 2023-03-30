@@ -242,17 +242,18 @@ with st.container():
                         )
                     except Exception as e:
                         st.write(e)
-            st.markdown(f"### AI 추천 {subject}")
-            placeholder = st.empty()
-            for chunk in response:
-                if chunk['choices'][0]['delta'].get('content'):
-                    st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
-                    with placeholder.container():
-                        st.write(st.session_state.typed_text)
-            st.download_button(f'결과물 다운로드', st.session_state.typed_text)
+                    st.markdown(f"### AI 추천 {subject}")
+                    placeholder = st.empty()
+                    for chunk in response:
+                        if chunk['choices'][0]['delta'].get('content'):
+                            st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
+                            with placeholder.container():
+                                st.write(st.session_state.typed_text)
+                    st.session_state.result_text = st.session_state.typed_text
+                    st.download_button('결과물 다운로드', st.session_state.result_text)
         else:
             st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
-    elif st.session_state.typed_text:
+    elif st.session_state.result_text:
         st.markdown(f"### AI 추천 {subject}")
         st.write(st.session_state.typed_text)
-        st.download_button(f'결과물 다운로드', st.session_state.typed_text)
+        st.download_button('결과물 다운로드', st.session_state.typed_text)
