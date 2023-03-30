@@ -69,6 +69,8 @@ st.session_state.position_names = ['선택 없음']+list(set(map(
     lambda x: re.search(pattern, x).group(1).strip().lower(),
     df['position'].unique().tolist()
     )))
+# sort st.session_state.position_names
+st.session_state.position_names.sort(key=lambda x: len(x), reverse=True)
 skills = list(set(map(lambda x: x.lower(), sum(df['skill_tags'].tolist(), []))))
 
 st.info('원하는 직무를 검색하고 자소서를 작성할 채용공고를 선택하세요', icon="ℹ️")
@@ -110,17 +112,20 @@ with st.expander('펼쳐보기'):
             temp_df = temp_df[temp_df['company_name'].str.contains(st.session_state.comp_name, case=False)]
 
         st.caption("-------------------------")
-        st.caption(':arrow_down: 컬럼명을 클릭해서 오름차순/내림차순 정렬하기')
-        st.dataframe(temp_df, use_container_width=True)
+        st.caption('지원하고자 하는 채용공고를 ✅선택하세요 👇')
+        temp_df['선택'] = [False]*len(temp_df)
+        edited_temp_df = st.experimental_data_editor(temp_df, use_container_width=True)
+        # get index no of row whose '선택' column is True
+        st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
 
     with col2:
         st.markdown('**채용공고 상세정보**') 
-        st.selectbox(
-                "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
-                temp_df.index.tolist(),
-                help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
-                key="jp_index"
-            )
+        # st.selectbox(
+        #         "지원하고자 하는 채용공고의 인덱스 번호를 선택/입력하세요 👇",
+        #         temp_df.index.tolist(),
+        #         help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
+        #         key="jp_index"
+        #     )
         st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
