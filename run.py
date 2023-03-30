@@ -122,9 +122,11 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
             posting_url = settings.wanted_url_prefix+str(posting['id'])
             company_name = posting['company_name']
             position = posting['position']
-            requirements = posting['requirements'].replace(" • ", "\n- ")
-            main_tasks = posting['main_tasks'].replace(" • ", "\n- ")
-            intro = posting['intro'].replace(" • ", "\n- ")
+            requirements = posting['requirements'].replace(" • ", "\n\n- ")
+            main_tasks = posting['main_tasks'].replace(" • ", "\n\n- ")
+            intro = posting['intro'].replace(" • ", "\n\n- ")
+            benefits = posting['benefits'].replace(" • ", "\n\n- ")
+            preferred = posting['preferred_points'].replace(" • ", "\n\n- ")
             deadline = posting['due_time'] if posting['due_time'] else "상시채용"
 
             st.markdown(f':arrow_right: 지원하기 [{st.session_state.table_name} 채용공고 링크]({posting_url})')
@@ -141,9 +143,9 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
                 with tab2:
                     st.markdown(f'**자격요건**\n{requirements}\n')
                 with tab3:
-                    st.markdown(f'**우대사항**\n{posting["preferred_points"]}\n')
+                    st.markdown(f'**우대사항**\n{preferred}\n')
                 with tab4:
-                    st.markdown(f'**복리후생**\n{posting["benefits"]}\n')
+                    st.markdown(f'**복리후생**\n{benefits}\n')
 
             # st.dataframe(posting, use_container_width=True)
         except TypeError and AttributeError:
