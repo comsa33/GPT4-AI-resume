@@ -20,5 +20,5 @@ def get_data(table_name):
 
 def replace_special_chars(text):
     pattern = r'(•|-(?!\d)|\d+\.)'
-    replaced_text = re.sub(pattern, ' \n', text)
+    replaced_text = re.sub(pattern, lambda m: f'  \n{m.group(0)}', text)
     return replaced_text
