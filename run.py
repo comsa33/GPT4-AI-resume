@@ -242,14 +242,15 @@ with st.container():
                         )
                     except Exception as e:
                         st.write(e)
-                    st.markdown(f"### AI 추천 {subject}")
+                    title = f"### AI 추천 {subject}"
+                    st.markdown(title)
                     placeholder = st.empty()
                     for chunk in response:
                         if chunk['choices'][0]['delta'].get('content'):
                             st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
                             with placeholder.container():
                                 st.write(st.session_state.typed_text)
-                    st.session_state.result_text = st.session_state.typed_text
+                    st.session_state.result_text = title + '\n' + st.session_state.typed_text
                     st.download_button('결과물 다운로드', st.session_state.result_text)
         else:
             st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
@@ -257,7 +258,7 @@ with st.container():
         _, col_center, _ = st.columns([1, 6, 1])
         with col_center:
             try:
-                st.markdown(f"### AI 추천 {subject}")
+                st.caption(f"⚠️ 전에 작성하신 글입니다. 새로 [글 생성하기]를 하시면 이 글은 사라집니다. [다운로드 버튼]을 눌러 다운로드하세요.")
                 st.write(st.session_state.result_text)
                 st.download_button('결과물 다운로드', st.session_state.result_text)
             except AttributeError:
