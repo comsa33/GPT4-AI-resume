@@ -221,12 +221,12 @@ prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글
 with st.container():
     st.session_state.typed_text = ''
     if st.button('글 생성하기'):
-        _, col_center, _ = st.columns([1, 6, 1])
-        with col_center:
-            st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
-            with st.container():
-                try:
-                    if jp_desc:
+        if jp_desc:
+            _, col_center, _ = st.columns([1, 6, 1])
+            with col_center:
+                st.caption("글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
+                with st.container():
+                    try:
                         response = openai.ChatCompletion.create(
                             model=st.session_state.model_name,
                             temperature=st.session_state.temperature,
@@ -240,18 +240,18 @@ with st.container():
                             ],
                             stream=True,
                         )
-                    else:
-                        st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
-                except Exception as e:
-                    st.write(e)
-        st.markdown(f"### AI 추천 {subject}")
-        placeholder = st.empty()
-        for chunk in response:
-            if chunk['choices'][0]['delta'].get('content'):
-                st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
-                with placeholder.container():
-                    st.write(st.session_state.typed_text)
-        st.download_button(f'결과물 다운로드', st.session_state.typed_text)
+                    except Exception as e:
+                        st.write(e)
+            st.markdown(f"### AI 추천 {subject}")
+            placeholder = st.empty()
+            for chunk in response:
+                if chunk['choices'][0]['delta'].get('content'):
+                    st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
+                    with placeholder.container():
+                        st.write(st.session_state.typed_text)
+            st.download_button(f'결과물 다운로드', st.session_state.typed_text)
+        else:
+            st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
     elif st.session_state.typed_text:
         st.markdown(f"### AI 추천 {subject}")
         st.write(st.session_state.typed_text)
