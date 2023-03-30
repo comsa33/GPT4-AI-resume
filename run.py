@@ -116,7 +116,10 @@ with st.expander('펼쳐보기'):
         temp_df = temp_df[['선택', 'company_name', 'position']]
         edited_temp_df = st.experimental_data_editor(temp_df, use_container_width=True)
         # get index no of row whose '선택' column is True
-        st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
+        try:
+            st.session_state.jp_index = edited_temp_df[edited_temp_df['선택']==True].index.tolist()[0]
+        except IndexError:
+            pass
 
     with col2:
         st.markdown('**채용공고 상세정보**')
@@ -126,7 +129,7 @@ with st.expander('펼쳐보기'):
         #         help=":grey_question: 검색 결과 테이블의 맨 좌측열의 인덱스 번호입니다.",
         #         key="jp_index"
         #     )
-        st.caption("-------------------------")
+        # st.caption("-------------------------")
         try:
             posting = df.iloc[int(st.session_state.jp_index)]
 
@@ -139,7 +142,7 @@ with st.expander('펼쳐보기'):
             st.markdown(f':arrow_right: [{st.session_state.table_name} 채용공고 링크]({posting_url})')
             st.dataframe(posting, use_container_width=True)
         except TypeError:
-            st.caption("⌗ 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
+            st.caption("⌗ 채용공고가 선택되지 않았거나, 선택하신 직무명이나 회사명으로 검색된 채용공고가 없습니다.")
 
 
 st.caption("-------------------------")
