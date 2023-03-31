@@ -325,5 +325,5 @@ if access_token:
     profile_data = get_linked_profile_info(settings.PROFILE_URL, access_token)
 
     if profile_data:
-        st.write(f"이름: {profile_data['firstName']['localized']['ko-KR']} {profile_data['lastName']['localized']['ko-KR']}")
+        st.json(profile_data)
         # 필요한 경우 추가 프로필 정보를 출력합니다.
