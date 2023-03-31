@@ -1,5 +1,7 @@
 import re
+from io import BytesIO
 
+from PIL import Image
 import requests
 import streamlit as st
 import openai
@@ -27,6 +29,16 @@ else:
 if access_token:
     if 'access_token' not in st.session_state:
         st.session_state.access_token = access_token
+    profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
+    settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
+    user_profile_photo_url = profile_data['profilePicture']['displayImage~']['elements'][-1]['identifiers'][0]['identifier']
+    linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
+    linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
+    st.markdown(linkedin_profile_string, unsafe_allow_html=True)
+
+    response = requests.get(linkedin_profile_url)
+    st.session_state.linkedin_profile_img = Image.open(BytesIO(response.content))
+
 else:
     if 'access_token' in st.session_state:
         access_token = st.session_state.access_token
@@ -64,7 +76,15 @@ with st.sidebar:
         key="table_name"
     )
     st.caption("-------------------------")
-    st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
+    
+    if access_token:
+        st.image(
+            st.session_state.linkedin_profile_img,
+            caption=settings.user_info[0]['fullname'],
+            width=30
+            )
+    else:
+        st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
     st.caption(
         """
@@ -79,6 +99,7 @@ with st.sidebar:
 # if st.session_state.API_KEY:
     # openai.api_key = st.session_state.API_KEY
 openai.api_key = settings.GPT_SECRET
+
 
 with st.spinner('데이터 로딩 중...'):
     df = funcs.get_data(st.session_state.table_name)
@@ -175,12 +196,6 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
 st.caption("-------------------------")
 with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정하세요'):
 
-    if access_token:
-        profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
-        settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
-        linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
-        linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
-        st.markdown(linkedin_profile_string, unsafe_allow_html=True)
 
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
 
@@ -280,6 +295,7 @@ if st.session_state.writing_type2 == "경력기술서":
 {settings.prompt_career} {lang2}"""
 elif st.session_state.writing_type2 == "이력서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
+이력서 사진 주소는 "{user_profile_photo_url}" 입니다.
 {settings.prompt_resume} {lang2}"""
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
