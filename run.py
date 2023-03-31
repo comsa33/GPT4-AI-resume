@@ -296,7 +296,7 @@ if st.button("LinkedIn으로 로그인"):
 
 
 def fetch_profile():
-    response = requests.get(f"{FLASK_SERVER_URL}/api/profile")
+    response = requests.get(f"{settings.FLASK_SERVER_URL}/api/profile")
     if response.status_code == 200:
         return response.json()
     else:
