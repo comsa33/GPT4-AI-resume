@@ -1,5 +1,8 @@
 import yaml
 
+# flask server
+FLASK_SERVER_URL = "http://210.123.105.183:31888"  # Flask 서버의 URL을 설정합니다.
+
 # postgre credential setting
 with open('credential/postgre_credentials.yaml', 'r') as file:
     cred_pg = yaml.safe_load(file)

@@ -1,12 +1,12 @@
 import re
 
+import requests
 import streamlit as st
 import openai
 import pandas as pd
 
 import core.functions as funcs
 from data import settings
-from oauth.linkedin import profile_data
 
 
 st.set_page_config(
@@ -291,11 +291,16 @@ with st.container():
                 pass
 
 
-if profile_data.status_code == 200:
-    # User is logged in, display their profile information
-    profile_data = profile_data.json()
-    st.write(f"환영합니다, {profile_data['localizedFirstName']} {profile_data['localizedLastName']}!")
-else:
-    # User is not logged in, show login button
-    login_url = "http://210.123.105.183:31888/auth"
-    st.markdown(f'[LinkedIn으로 로그인]({login_url})')
+if st.button("LinkedIn으로 로그인"):
+    st.write(f"{settings.FLASK_SERVER_URL}/login")
+
+    def fetch_profile():
+        response = requests.get(f"{FLASK_SERVER_URL}/api/profile")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+
+    profile = fetch_profile()
+    if profile:
+        st.write(profile)
