@@ -3,6 +3,9 @@ import yaml
 # flask server
 FLASK_SERVER_URL = "http://210.123.105.183:31888"  # Flask 서버의 URL을 설정합니다.
 
+# linkedin setting
+PROFILE_URL = 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,headline,industryName,summary,location,positions,vanityName)'
+
 # postgre credential setting
 with open('credential/postgre_credentials.yaml', 'r') as file:
     cred_pg = yaml.safe_load(file)

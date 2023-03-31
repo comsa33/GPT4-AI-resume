@@ -295,21 +295,34 @@ def get_linked_profile_info(url, access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+    if response.status_code != 200:
+        st.error(f"Error fetching profile data: {response.content}")
         return None
 
+    return response.json()
 
-flask_profile_url = f"{settings.FLASK_SERVER_URL}/api/profile"
+
+# Get the URL from the Streamlit app
+url = st.experimental_get_query_params()
+
+# Extract the access_token from the URL
+if 'access_token' in url:
+    access_token = url['access_token'][0]
+else:
+    access_token = None
+
+if access_token:
+    if 'access_token' not in st.session_state:
+        st.session_state.access_token = access_token
+else:
+    if 'access_token' in st.session_state:
+        access_token = st.session_state.access_token
 
 if st.button("LinkedIn으로 로그인"):
     st.write(f"{settings.FLASK_SERVER_URL}/login")
 
-access_token = session_state.access_token
-
 if access_token:
-    profile_data = get_linked_profile_info(flask_profile_url, access_token)
+    profile_data = get_linked_profile_info(settings.PROFILE_URL, access_token)
 
     if profile_data:
         st.write(f"이름: {profile_data['firstName']['localized']['ko-KR']} {profile_data['lastName']['localized']['ko-KR']}")
