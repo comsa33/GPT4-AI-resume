@@ -229,8 +229,11 @@ with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정�
             height=140,
             help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
-        with st.expander('📝 경력기술서 잘 작성하는 방법'):
-            st.caption(settings.career_achievements_tips)
+
+_, _, col_tip = st.columns([8, 1, 10])
+with col_tip:
+    with st.expander('📝 경력기술서 잘 작성하는 방법'):
+        st.caption(settings.career_achievements_tips)
 
 st.caption("-------------------------")
 st.info('AI에게 가이드를 받아보세요', icon="🤖")
