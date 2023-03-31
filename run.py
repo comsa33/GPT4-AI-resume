@@ -178,7 +178,10 @@ with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정�
 
     if access_token:
         profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
-
+        st.write(profile_data['lastName'])
+        st.write(profile_data['firstName'])
+        st.write(profile_data['vanityName'])
+        
         settings.user_info['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
         linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
         st.markdown(f'<div align="right">&#x27A1; <a href="{linkedin_profile_url}">{settings.user_info["fullname"]}님의 링크드인 프로필 바로가기</a> </div>')
