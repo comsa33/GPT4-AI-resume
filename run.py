@@ -6,7 +6,7 @@ import pandas as pd
 
 import core.functions as funcs
 from data import settings
-from oauth.oauth import auth_callback
+from oauth.linkedin import profile_data
 
 
 st.set_page_config(
@@ -290,5 +290,12 @@ with st.container():
                 st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
                 pass
 
-if st.button('링크드인으로 로그인'):
-    st.json(auth_callback())
+
+if profile_data.status_code == 200:
+    # User is logged in, display their profile information
+    profile_data = profile_data.json()
+    st.write(f"환영합니다, {profile_data['localizedFirstName']} {profile_data['localizedLastName']}!")
+else:
+    # User is not logged in, show login button
+    login_url = "http://210.123.105.183:31888/auth"
+    st.markdown(f'[LinkedIn으로 로그인]({login_url})')

@@ -1,17 +1,5 @@
 import yaml
 
-# linkedin credential setting
-with open('credential/linkedin_credentials.yaml', 'r') as file:
-    cred_lnkdin = yaml.safe_load(file)
-
-LINKEDIN_CLIENT_ID = cred_lnkdin['linkedin']['client_id']
-LINKEDIN_CLIENT_SECRET = cred_lnkdin['linkedin']['client_secret']
-REDIRECT_URI = cred_lnkdin['linkedin']['redirect_uri']
-ACCESS_TOKEN = cred_lnkdin['linkedin']['access_token']
-AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
-TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
-PROFILE_URL = 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,headline,industryName,summary,location,positions,vanityName)'
-
 # postgre credential setting
 with open('credential/postgre_credentials.yaml', 'r') as file:
     cred_pg = yaml.safe_load(file)
