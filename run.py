@@ -34,7 +34,7 @@ else:
 st.session_state.table_names = funcs.table_names
 st.session_state.models = ["gpt-4", "gpt-3.5-turbo"]
 
-st.title('GPT-4 채용공고별 자소서 가이드')
+st.title('GPT-4 채용공고별 이력서&자소서 가이드')
 st.caption('본 테스트 서비스는 사용자 분들의 개인정보를 절대 수집하지 않습니다. 소스코드는 깃허브에 공개되어 있습니다.')
 
 with st.sidebar:
@@ -228,7 +228,7 @@ with col_ai1:
         )
     st.radio(
         "",
-        ('자기소개', '지원동기', '나의 장단점', '경력기술서'),
+        ('자기소개', '지원동기', '나의 장단점', '경력기술서', '이력서'),
         key="writing_type2",
         label_visibility="collapsed"
         )
@@ -269,6 +269,9 @@ user_desc = f"""
 if st.session_state.writing_type2 == "경력기술서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {settings.prompt_career}"""
+elif st.session_state.writing_type2 == "이력서":
+    prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
+{settings.prompt_resume}"""
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
