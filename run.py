@@ -64,11 +64,11 @@ with st.sidebar:
         key="table_name"
     )
     st.caption("-------------------------")
-    st.markdown(f"[링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
+    st.markdown(f"[🪢 링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
     st.caption(
     """
-    
+
 
 -------------------------
 - 개발자: 이루오

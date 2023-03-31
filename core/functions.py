@@ -1,4 +1,5 @@
 import re
+import json
 
 import requests
 import pandas as pd
@@ -36,4 +37,4 @@ def get_linked_profile_info(url, access_token):
         st.error(f"Error fetching profile data: {response.content}")
         return None
 
-    return response.json()
+    return json.loads(response.json())
