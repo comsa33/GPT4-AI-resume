@@ -33,7 +33,7 @@ if access_token:
     settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
     user_linkedin_headline = profile_data['headline']['localized']['ko_KR']
     user_profile_photo_url = profile_data['profilePicture']['displayImage~']['elements'][-1]['identifiers'][0]['identifier']
-    user_profile_photo_url_mid = profile_data['profilePicture']['displayImage~']['elements'][3]['identifiers'][0]['identifier']
+    user_profile_photo_url_mid = profile_data['profilePicture']['displayImage~']['elements'][1]['identifiers'][0]['identifier']
 
     linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
     linkedin_profile_string = f'<div align="left">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
