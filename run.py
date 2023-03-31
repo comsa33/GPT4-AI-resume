@@ -6,7 +6,6 @@ import openai
 import pandas as pd
 
 import core.functions as funcs
-import core.session_state as session_state
 from data import settings
 
 st.set_page_config(
@@ -15,6 +14,22 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
 )
+
+# Get the URL from the Streamlit app
+url = st.experimental_get_query_params()
+
+# Extract the access_token from the URL
+if 'access_token' in url:
+    access_token = url['access_token'][0]
+else:
+    access_token = None
+
+if access_token:
+    if 'access_token' not in st.session_state:
+        st.session_state.access_token = access_token
+else:
+    if 'access_token' in st.session_state:
+        access_token = st.session_state.access_token
 
 st.session_state.table_names = funcs.table_names
 st.session_state.models = ["gpt-4", "gpt-3.5-turbo"]
@@ -48,9 +63,11 @@ with st.sidebar:
         st.session_state.table_names,
         key="table_name"
     )
+    st.markdown(f"[링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
+
     st.caption(
     """
-
+    
 
 -------------------------
 - 개발자: 이루오
@@ -157,7 +174,16 @@ with st.expander('📜 원하는 직무를 검색하고 자소서를 작성할 �
 
 st.caption("-------------------------")
 with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정하세요'):
+
+    if access_token:
+        profile_data = settings.get_linked_profile_info(settings.PROFILE_URL, access_token)
+
+        settings.user_info['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
+        linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
+        st.markdown(f'<div align="right">&#x27A1; <a href="{linkedin_profile_url}">{settings.user_info["fullname"]}님의 링크드인 프로필 바로가기</a> </div>')
+
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
+
     st.markdown('👤 **지원자 기본정보**')
     info_df = pd.DataFrame(settings.user_info)
     edited_info_df = st.experimental_data_editor(info_df, use_container_width=True)
@@ -289,41 +315,3 @@ with st.container():
             except AttributeError:
                 st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
                 pass
-
-
-def get_linked_profile_info(url, access_token):
-    headers = {'Authorization': f'Bearer {access_token}'}
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        st.error(f"Error fetching profile data: {response.content}")
-        return None
-
-    return response.json()
-
-
-# Get the URL from the Streamlit app
-url = st.experimental_get_query_params()
-
-# Extract the access_token from the URL
-if 'access_token' in url:
-    access_token = url['access_token'][0]
-else:
-    access_token = None
-
-if access_token:
-    if 'access_token' not in st.session_state:
-        st.session_state.access_token = access_token
-else:
-    if 'access_token' in st.session_state:
-        access_token = st.session_state.access_token
-
-if st.button("LinkedIn으로 로그인"):
-    st.write(f"{settings.FLASK_SERVER_URL}/login")
-
-if access_token:
-    profile_data = get_linked_profile_info(settings.PROFILE_URL, access_token)
-
-    if profile_data:
-        st.json(profile_data)
-        # 필요한 경우 추가 프로필 정보를 출력합니다.
