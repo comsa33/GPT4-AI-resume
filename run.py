@@ -208,13 +208,14 @@ with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정�
         career_df = pd.DataFrame(settings.career_history)
         edited_career_df = st.experimental_data_editor(career_df, num_rows="dynamic", use_container_width=True)
     with col_user5:
-        st.markdown('')
         my_achievements = st.text_area(
             '✒️ 지원자 경력기술서 및 성과에 대해서 입력하세요',
             settings.career_achievements,
             height=140,
             help=":grey_question: 자신의 역량을 드러낼 수 있는 성과를 입력하세요. 수치화하여 자세히 입력할 수록 결과물의 품질이 좋아집니다."
         )
+        with st.expander('📝 경력기술서 잘 작성하는 방법'):
+            st.caption(settings.career_achievements_tips)
 
 st.caption("-------------------------")
 st.info('AI에게 가이드를 받아보세요', icon="🤖")
@@ -227,7 +228,7 @@ with col_ai1:
         label_visibility="collapsed"
         )
     st.radio(
-        "",
+        '',
         ('자기소개', '지원동기', '나의 장단점', '경력기술서', '이력서'),
         key="writing_type2",
         label_visibility="collapsed"
@@ -237,15 +238,23 @@ with col_ai1:
     else:
         subject = st.session_state.writing_type1
 with col_ai2:
+    if subject in ['경력기술서', '이력서']:
+        st.session_state.minmax_disabled = True
+    else:
+        st.session_state.minmax_disabled = False
     min_letter, max_letter = st.slider(
         '✉️ 최소, 최대 글자수를 선택하세요',
-        100, 1000, (400, 600))
+        100, 1000, (400, 600),
+        help=":grey_question: AI가 작성할 글의 최소, 최대 글자수를 선택하세요. 경력기술서, 이력서는 글자수 제한이 없습니다.",
+        disabled=st.session_state.minmax_disabled
+        )
     st.radio(
         "🔠 언어를 선택하세요",
         ('한국어', '영어'),
         key="lang_choice"
     )
-    lang = f"{st.session_state.lang_choice}와 markdown 스타일로 작성하세요."
+    lang1 = f"{st.session_state.lang_choice}와 markdown 스타일로 작성하세요."
+    lang2 = f"{st.session_state.lang_choice}로 작성하세요."
 st.caption("-------------------------")
 
 try:
@@ -268,14 +277,14 @@ user_desc = f"""
 
 if st.session_state.writing_type2 == "경력기술서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
-{settings.prompt_career}"""
+{settings.prompt_career} {lang2}"""
 elif st.session_state.writing_type2 == "이력서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
-{settings.prompt_resume}"""
+{settings.prompt_resume} {lang2}"""
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
-{settings.prompt_default}"""
+{settings.prompt_default} {lang1}}"""
 
 with st.container():
     st.session_state.typed_text = ''
@@ -295,7 +304,7 @@ with st.container():
                                 {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
                                 {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
                                 {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
-                                {"role": "user", "content": f"{prompt_msg}+{lang}"}
+                                {"role": "user", "content": f"{prompt_msg}"}
                             ],
                             stream=True,
                         )
