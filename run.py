@@ -228,7 +228,7 @@ with col_ai1:
         )
     st.radio(
         "",
-        ('자기소개', '지원동기', '나의 장단점'),
+        ('자기소개', '지원동기', '나의 장단점', '경력기술서'),
         key="writing_type2",
         label_visibility="collapsed"
         )
@@ -265,7 +265,12 @@ user_desc = f"""
 - 내 보유 스킬: {my_skills}
 - 내 경력 정보: {edited_career_df.to_dict()}
 - 내 경력기술서 및 성과: {my_achievements}"""
-prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
+
+if st.session_state.writing_type2 == "경력기술서":
+    prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
+{settings.prompt_career}"""
+else:
+    prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
 {settings.prompt_default}"""
 
