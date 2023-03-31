@@ -81,7 +81,7 @@ with st.sidebar:
         st.image(
             st.session_state.linkedin_profile_img,
             caption=settings.user_info[0]['fullname'],
-            width=30
+            width=100
             )
     else:
         st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
