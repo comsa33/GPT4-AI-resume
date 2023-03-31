@@ -304,7 +304,6 @@ if st.session_state.writing_type2 == "경력기술서":
 {settings.prompt_career} {lang2}"""
 elif st.session_state.writing_type2 == "이력서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
-이력서 사진 주소는 "{user_profile_photo_url}" 입니다.
 {settings.prompt_resume} {lang2}"""
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
