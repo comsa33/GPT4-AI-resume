@@ -35,7 +35,7 @@ if access_token:
     user_profile_photo_url = profile_data['profilePicture']['displayImage~']['elements'][-1]['identifiers'][0]['identifier']
 
     linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
-    linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
+    linkedin_profile_string = f'<div align="left">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
 
     response = requests.get(user_profile_photo_url)
     st.session_state.linkedin_profile_img = Image.open(BytesIO(response.content))
