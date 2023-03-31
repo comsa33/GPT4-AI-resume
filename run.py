@@ -179,7 +179,7 @@ with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정�
         profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
         settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
         linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
-        linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target='_self'>지원자 LinkedIn 프로필 바로가기</a> </div>'
+        linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target=\'_self\'>지원자 LinkedIn 프로필 바로가기</a> </div>'
         st.markdown(linkedin_profile_string, unsafe_allow_html=True)
 
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
