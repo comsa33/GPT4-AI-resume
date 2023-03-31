@@ -36,7 +36,6 @@ if access_token:
 
     linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
     linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
-    st.markdown(linkedin_profile_string, unsafe_allow_html=True)
 
     response = requests.get(user_profile_photo_url)
     st.session_state.linkedin_profile_img = Image.open(BytesIO(response.content))
@@ -80,17 +79,18 @@ with st.sidebar:
     st.caption("-------------------------")
     
     if access_token:
-        col_lnb1, col_lnb2 = st.columns(2)
+        col_lnb1, col_lnb2 = st.columns([2, 5])
         with col_lnb1:
             st.image(
                 st.session_state.linkedin_profile_img,
                 caption=settings.user_info[0]['fullname'],
-                width=100
+                width=70
                 )
         with col_lnb2:
-            st.caption(user_linkedin_headline)
+            st.markdown(user_linkedin_headline)
+        st.caption(linkedin_profile_string, unsafe_allow_html=True)
     else:
-        st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
+        st.caption(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
     st.caption(
         """
