@@ -6,7 +6,7 @@ import pandas as pd
 
 import core.functions as funcs
 from data import settings
-
+from oauth.oauth import auth_callback
 
 
 st.set_page_config(
@@ -61,7 +61,7 @@ with st.sidebar:
 
 # if st.session_state.API_KEY:
     # openai.api_key = st.session_state.API_KEY
-openai.api_key = settings.my_secret
+openai.api_key = settings.GPT_SECRET
 
 with st.spinner('데이터 로딩 중...'):
     df = funcs.get_data(st.session_state.table_name)
@@ -289,3 +289,6 @@ with st.container():
             except AttributeError:
                 st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
                 pass
+
+if st.button('링크드인으로 로그인'):
+    st.json(auth_callback())

@@ -1,10 +1,34 @@
-POSTGRE_HOST = "210.123.105.183"
-POSTGRE_PORT = "30523"
-POSTGRE_USERNAME = "postgres"
-POSTGRE_PASSWORD = "4460"
-POSTGRE_DATABASE_1 = "ai_lab"
+import yaml
 
-my_secret = "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"
+# linkedin credential setting
+with open('credential/linkedin_credentials.yaml', 'r') as file:
+    cred_lnkdin = yaml.safe_load(file)
+
+LINKEDIN_CLIENT_ID = cred_lnkdin['linkedin']['client_id']
+LINKEDIN_CLIENT_SECRET = cred_lnkdin['linkedin']['client_secret']
+REDIRECT_URI = cred_lnkdin['linkedin']['redirect_uri']
+ACCESS_TOKEN = cred_lnkdin['linkedin']['access_token']
+AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
+TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
+PROFILE_URL = 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,headline,industryName,summary,location,positions,vanityName)'
+
+# postgre credential setting
+with open('credential/postgre_credentials.yaml', 'r') as file:
+    cred_pg = yaml.safe_load(file)
+
+POSTGRE_HOST = cred_pg['postgre']['host']
+POSTGRE_PORT = cred_pg['postgre']['port']
+POSTGRE_USERNAME = cred_pg['postgre']['username']
+POSTGRE_PASSWORD = cred_pg['postgre']['password']
+POSTGRE_DATABASE_1 = cred_pg['postgre']['database_1']
+
+# gpt-4 api secret key
+with open('credential/gptapi_credentials.yaml', 'r') as file:
+    cred_gpt = yaml.safe_load(file)
+
+GPT_SECRET = cred_gpt['gpt']['secret_key']
+
+# user profile setting and prompt message setting
 wanted_url_prefix = "https://www.wanted.co.kr/wd/"
 
 user_info = [
