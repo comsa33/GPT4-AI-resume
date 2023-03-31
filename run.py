@@ -63,6 +63,7 @@ with st.sidebar:
         st.session_state.table_names,
         key="table_name"
     )
+    st.caption("-------------------------")
     st.markdown(f"[링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
     st.caption(
@@ -176,7 +177,7 @@ st.caption("-------------------------")
 with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정하세요'):
 
     if access_token:
-        profile_data = settings.get_linked_profile_info(settings.PROFILE_URL, access_token)
+        profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
 
         settings.user_info['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
         linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
