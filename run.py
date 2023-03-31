@@ -6,8 +6,8 @@ import openai
 import pandas as pd
 
 import core.functions as funcs
+import core.session_state as session_state
 from data import settings
-
 
 st.set_page_config(
     page_title="AI 자소서",
@@ -291,18 +291,26 @@ with st.container():
                 pass
 
 
-if st.button("LinkedIn으로 로그인"):
-    st.write(f"{settings.FLASK_SERVER_URL}/login")
+def get_linked_profile_info(url, access_token):
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = requests.get(url, headers=headers)
 
-
-def fetch_profile():
-    response = requests.get(f"{settings.FLASK_SERVER_URL}/api/profile")
     if response.status_code == 200:
         return response.json()
     else:
         return None
 
 
-profile = fetch_profile()
-if profile:
-    st.write(profile)
+flask_profile_url = f"{settings.FLASK_SERVER_URL}/api/profile"
+
+if st.button("LinkedIn으로 로그인"):
+    st.write(f"{settings.FLASK_SERVER_URL}/login")
+
+access_token = session_state.access_token
+
+if access_token:
+    profile_data = get_linked_profile_info(flask_profile_url, access_token)
+
+    if profile_data:
+        st.write(f"이름: {profile_data['firstName']['localized']['ko-KR']} {profile_data['lastName']['localized']['ko-KR']}")
+        # 필요한 경우 추가 프로필 정보를 출력합니다.
