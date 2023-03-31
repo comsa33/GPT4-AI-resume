@@ -285,24 +285,28 @@ with st.container():
             try:
                 st.write(st.session_state.result_text)
                 st.download_button('결과물 다운로드', st.session_state.result_text)
-                st.caption(f"⚠️ 전에 작성하신 글입니다. 새로 [글 생성하기]를 하시면 이 글은 사라집니다. [다운로드 버튼]을 눌러 다운로드하세요.")
+                st.caption("⚠️ 전에 작성하신 글입니다. 새로 [글 생성하기]를 하시면 이 글은 사라집니다. [다운로드 버튼]을 눌러 다운로드하세요.")
             except AttributeError:
-                st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
+                st.caption("⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
                 pass
 
+
+def get_linked_profile_info(flask_api_url):
+    response = requests.get(flask_api_url)
+
+    if response.status_code != 200:
+        return None
+
+    return response.json()
+
+flask_profile_url = "http://210.123.105.183:31888/api/profile"
 
 if st.button("LinkedIn으로 로그인"):
     st.write(f"{settings.FLASK_SERVER_URL}/login")
 
+if 'access_token' in session:
+    profile_data = get_linked_profile_info(flask_profile_url)
 
-def fetch_profile():
-    response = requests.get(f"{settings.FLASK_SERVER_URL}/api/profile")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
-
-
-profile = fetch_profile()
-if profile:
-    st.json(profile)
+    if profile_data:
+        st.write(f"이름: {profile_data['firstName']['localized']['ko_KR']} {profile_data['headline']['localized']['ko_KR']}")
+        # 필요한 경우 추가 프로필 정보를 출력합니다.
