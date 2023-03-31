@@ -33,6 +33,7 @@ if access_token:
     settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
     user_linkedin_headline = profile_data['headline']['localized']['ko_KR']
     user_profile_photo_url = profile_data['profilePicture']['displayImage~']['elements'][-1]['identifiers'][0]['identifier']
+    user_profile_photo_url_mid = profile_data['profilePicture']['displayImage~']['elements'][3]['identifiers'][0]['identifier']
 
     linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
     linkedin_profile_string = f'<div align="left">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
@@ -304,7 +305,7 @@ if st.session_state.writing_type2 == "경력기술서":
 {settings.prompt_career} {lang1}"""
 elif st.session_state.writing_type2 == "이력서":
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
-이력서 사진 주소는 "{user_profile_photo_url}" 입니다.
+이력서 사진 주소는 "{user_profile_photo_url_mid}" 입니다.
 {settings.prompt_resume} {lang1}"""
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
