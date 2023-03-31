@@ -294,13 +294,15 @@ with st.container():
 if st.button("LinkedIn으로 로그인"):
     st.write(f"{settings.FLASK_SERVER_URL}/login")
 
-    def fetch_profile():
-        response = requests.get(f"{settings.FLASK_SERVER_URL}/api/profile")
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return None
 
-    profile = fetch_profile()
-    if profile:
-        st.write(profile)
+def fetch_profile():
+    response = requests.get(f"{settings.FLASK_SERVER_URL}/api/profile")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
+profile = fetch_profile()
+if profile:
+    st.json(profile)
