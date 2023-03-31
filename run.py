@@ -31,7 +31,9 @@ if access_token:
         st.session_state.access_token = access_token
     profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
     settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
+    user_linkedin_headline = profile_data['headline']['localized']['ko_KR']
     user_profile_photo_url = profile_data['profilePicture']['displayImage~']['elements'][-1]['identifiers'][0]['identifier']
+
     linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
     linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
     st.markdown(linkedin_profile_string, unsafe_allow_html=True)
@@ -78,11 +80,15 @@ with st.sidebar:
     st.caption("-------------------------")
     
     if access_token:
-        st.image(
-            st.session_state.linkedin_profile_img,
-            caption=settings.user_info[0]['fullname'],
-            width=100
-            )
+        col_lnb1, col_lnb2 = st.columns(2)
+        with col_lnb1:
+            st.image(
+                st.session_state.linkedin_profile_img,
+                caption=settings.user_info[0]['fullname'],
+                width=100
+                )
+        with col_lnb2:
+            st.caption(user_linkedin_headline)
     else:
         st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
