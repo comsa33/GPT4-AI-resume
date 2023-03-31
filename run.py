@@ -64,17 +64,16 @@ with st.sidebar:
         key="table_name"
     )
     st.caption("-------------------------")
-    st.markdown(f"[🪢 링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
+    st.markdown(f"🪢 [링크드인으로 로그인]({settings.FLASK_SERVER_URL}/login)")
 
     st.caption(
-    """
+        """
 
 
 -------------------------
 - 개발자: 이루오
 - 이메일: comsa33@kakao.com
-- 깃허브: https://github.com/comsa33/GPT4-AI-resume
-    """
+- 깃허브: https://github.com/comsa33/GPT4-AI-resume"""
     )
 
 # if st.session_state.API_KEY:
@@ -180,7 +179,7 @@ with st.expander('ℹ️ 지원자 정보를 자신의 정보에 맞게 수정�
         profile_data = funcs.get_linked_profile_info(settings.PROFILE_URL, access_token)
         settings.user_info[0]['fullname'] = profile_data['lastName']['localized']['ko_KR']+' '+profile_data['firstName']['localized']['ko_KR']
         linkedin_profile_url = 'linkedin.com/in/'+profile_data['vanityName']
-        st.markdown(f'<div align="right">&#x27A1; <a href="{linkedin_profile_url}">{settings.user_info["fullname"]}님의 링크드인 프로필 바로가기</a> </div>')
+        st.markdown(f'<div align="right">&#x27A1; <a href="{linkedin_profile_url}">{settings.user_info[0]["fullname"]}님의 링크드인 프로필 바로가기</a> </div>')
 
     st.caption(':arrow_down: 테이블의 셀을 더블클릭하면 정보를 수정할 수 있습니다.')
 
