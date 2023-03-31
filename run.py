@@ -284,7 +284,7 @@ elif st.session_state.writing_type2 == "이력서":
 else:
     prompt_msg = f"""회사에 이력서와 함께 제출할 {subject}에 대한 글을 작성하세요.
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
-{settings.prompt_default} {lang1}}"""
+{settings.prompt_default} {lang1}"""
 
 with st.container():
     st.session_state.typed_text = ''
