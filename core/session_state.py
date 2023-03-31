@@ -12,7 +12,7 @@ def __getattr__(name: str):
     if name in state:
         return state[name]
     else:
-        raise AttributeError(f"No such attribute: {name}")
+        return None
 
 
 def __setattr__(name: str, value) -> None:
