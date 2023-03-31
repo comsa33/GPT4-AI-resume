@@ -36,7 +36,7 @@ if access_token:
     linkedin_profile_string = f'<div align="right">&#x27A1; <a href="https://{linkedin_profile_url}" target="_self">지원자 LinkedIn 프로필 바로가기</a> </div>'
     st.markdown(linkedin_profile_string, unsafe_allow_html=True)
 
-    response = requests.get(linkedin_profile_url)
+    response = requests.get(user_profile_photo_url)
     st.session_state.linkedin_profile_img = Image.open(BytesIO(response.content))
 
 else:
