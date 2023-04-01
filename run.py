@@ -7,6 +7,7 @@ import streamlit as st
 import openai
 import pandas as pd
 
+from model import gpt_model
 import core.functions as funcs
 from data import settings
 
@@ -102,6 +103,9 @@ with st.sidebar:
 - 이메일: comsa33@kakao.com
 - 깃허브: https://github.com/comsa33/GPT4-AI-resume"""
     )
+
+model=st.session_state.model_name
+temperature=st.session_state.temperature
 
 # if st.session_state.API_KEY:
     # openai.api_key = st.session_state.API_KEY
@@ -312,6 +316,27 @@ else:
 {min_letter}~{max_letter} 글자 사이로 작성하세요.
 {settings.prompt_default} {lang1}"""
 
+with st.expander('지원하는 회사의 일하는 방식, 인재상, 문화에 대한 정보를 확인해보세요.'):
+    try:
+        st.subheader(company_name)
+        messages_1 = [
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                        {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
+                        {"role": "user", "content": f"이 회사의 일하는 방식, 인재상, 문화에 대한 정보를 알려줘."}
+                    ]
+        response1 = gpt_model.get_response_from_model(
+            model, temperature, messages_1
+        )
+        placeholder1 = st.empty()
+        for chunk in response1:
+            if chunk['choices'][0]['delta'].get('content'):
+                st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
+                with placeholder1.container():
+                    st.write(st.session_state.typed_text)
+    except:
+        st.caption("⚠️ 회사의 채용정보를 선택하지 않았습니다.")
+
 with st.container():
     st.session_state.typed_text = ''
     if st.button('글 생성하기'):
@@ -321,31 +346,29 @@ with st.container():
                 st.caption("⏳ 글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
                 with st.container():
                     try:
-                        response = openai.ChatCompletion.create(
-                            model=st.session_state.model_name,
-                            temperature=st.session_state.temperature,
-                            messages=[
-                                {"role": "system", "content": "You are a helpful assistant."},
-                                {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
-                                {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
-                                {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
-                                {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
-                                {"role": "user", "content": f"{prompt_msg}"}
-                            ],
-                            stream=True,
+                        messages_2 = [
+                            {"role": "system", "content": "You are a helpful assistant."},
+                            {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
+                            {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
+                            {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
+                            {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
+                            {"role": "user", "content": f"{prompt_msg}"}
+                        ]
+                        response2 = gpt_model.get_response_from_model(
+                            model, temperature, messages_2
                         )
+                        title = f"### AI 추천 {subject}"
+                        st.markdown(title)
+                        placeholder2 = st.empty()
+                        for chunk in response2:
+                            if chunk['choices'][0]['delta'].get('content'):
+                                st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
+                                with placeholder2.container():
+                                    st.write(st.session_state.typed_text)
+                        st.session_state.result_text = title + '\n' + st.session_state.typed_text
+                        st.download_button('결과물 다운로드', st.session_state.result_text)
                     except Exception as e:
                         st.write(e)
-                    title = f"### AI 추천 {subject}"
-                    st.markdown(title)
-                    placeholder = st.empty()
-                    for chunk in response:
-                        if chunk['choices'][0]['delta'].get('content'):
-                            st.session_state.typed_text += chunk['choices'][0]['delta'].get('content')
-                            with placeholder.container():
-                                st.write(st.session_state.typed_text)
-                    st.session_state.result_text = title + '\n' + st.session_state.typed_text
-                    st.download_button('결과물 다운로드', st.session_state.result_text)
         else:
             st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
     else:
