@@ -346,7 +346,7 @@ with col_gpt1:
             try:
                 st.subheader(company_name)
                 st.caption(st.session_state.comp_info)
-            except AttributeError and NameError:
+            except AttributeError or NameError:
                 st.caption(f"⚠️ 아직 확인된 정보가 없습니다. [물어보기] 버튼을 눌러주세요.")
 
 with col_gpt2:
