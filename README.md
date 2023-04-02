@@ -45,6 +45,6 @@ _[그림 1] http://gpt-recruit.com GPT-4 채용공고별 자소서 가이드 서
 
 ## LICENSE
 
-이 프로젝트는 [GNU 라이선스](https://github.com/comsa33/ai_resume/blob/main/LICENSE.txt)에 따라 라이선스가 부여됩니다.
+이 프로젝트는 [GNU 라이선스](https://github.com/comsa33/GPT4-AI-resume/blob/main/LICENSE)에 따라 라이선스가 부여됩니다.
 
 Copyright © 2023 이루오. All Rights Reserved.
