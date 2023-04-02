@@ -338,7 +338,7 @@ with col_gpt1:
                     if chunk['choices'][0]['delta'].get('content'):
                         st.session_state.typed_text1 += chunk['choices'][0]['delta'].get('content')
                         with placeholder1.container():
-                            st.write(st.session_state.typed_text1)
+                            st.caption(st.session_state.typed_text1)
             except:
                 st.caption("⚠️ 회사의 채용정보를 선택하지 않았습니다.")
 
