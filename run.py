@@ -319,7 +319,7 @@ else:
 col_gpt1, col_gpt2 = st.columns([5, 10])
 
 with col_gpt1:
-    with st.expander('🏢 지원하는 회사의 일하는 방식, 인재상, 문화에 대한 정보를 확인해보세요.', expanded=True):
+    with st.expander('🏢 지원하는 회사 정보를 더 확인해보세요.', expanded=True):
         st.session_state.typed_text1 = ''
         if st.button(f'{st.session_state.model_name}에게 물어보기'):
             try:
@@ -341,6 +341,12 @@ with col_gpt1:
                             st.caption(st.session_state.typed_text1)
             except:
                 st.caption("⚠️ 회사의 채용정보를 선택하지 않았습니다.")
+        else:
+            try:
+                st.subheader(company_name)
+                st.caption(st.session_state.typed_text1)
+            except AttributeError:
+                st.caption(f"⚠️ 아직 확인된 정보가 없습니다. [물어보기] 버튼을 눌러주세요.")
 
 with col_gpt2:
     with st.expander('📃 지원자님의 정보를 바탕으로 채용공고에 맞는 글을 작성합니다.', expanded=True):
@@ -348,7 +354,7 @@ with col_gpt2:
             st.session_state.typed_text2 = ''
             if st.button('글 생성하기'):
                 if jp_desc:
-                    _, col_center, _ = st.columns([1, 6, 1])
+                    _, col_center, _ = st.columns([1, 10, 1])
                     with col_center:
                         st.caption("⏳ 글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
                         with st.container():
@@ -399,4 +405,3 @@ with col_gpt2:
                         st.caption(f"⚠️ 전에 작성하신 글입니다. 새로 [글 생성하기]를 하시면 이 글은 사라집니다. [다운로드 버튼]을 눌러 다운로드하세요.")
                     except AttributeError:
                         st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
-                        pass
