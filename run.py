@@ -339,12 +339,13 @@ with col_gpt1:
                         st.session_state.typed_text1 += chunk['choices'][0]['delta'].get('content')
                         with placeholder1.container():
                             st.caption(st.session_state.typed_text1)
+                        st.session_state.comp_info = st.session_state.typed_text1
             except:
                 st.caption("⚠️ 회사의 채용정보를 선택하지 않았습니다.")
         else:
             try:
                 st.subheader(company_name)
-                st.caption(st.session_state.typed_text1)
+                st.caption(st.session_state.comp_info)
             except AttributeError:
                 st.caption(f"⚠️ 아직 확인된 정보가 없습니다. [물어보기] 버튼을 눌러주세요.")
 
@@ -397,7 +398,7 @@ with col_gpt2:
                 else:
                     st.caption("⚠️ 회사의 채용정보를 입력하지 않았습니다.")
             else:
-                _, col_center, _ = st.columns([1, 6, 1])
+                _, col_center, _ = st.columns([1, 10, 1])
                 with col_center:
                     try:
                         st.write(st.session_state.result_text)
