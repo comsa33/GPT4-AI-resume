@@ -385,7 +385,7 @@ with col_gpt2:
                                         with placeholder2.container():
                                             st.caption(st.session_state.typed_text2)
                                 st.session_state.result_text = title + '\n' + st.session_state.typed_text2
-                                st.download_button('결과물 다운로드', st.session_state.result_text2)
+                                st.download_button('결과물 다운로드', st.session_state.result_text)
                             except Exception as e:
                                 st.write(e)
                 else:
@@ -395,7 +395,7 @@ with col_gpt2:
                 with col_center:
                     try:
                         st.write(st.session_state.result_text)
-                        st.download_button('결과물 다운로드', st.session_state.result_text2)
+                        st.download_button('결과물 다운로드', st.session_state.result_text)
                         st.caption(f"⚠️ 전에 작성하신 글입니다. 새로 [글 생성하기]를 하시면 이 글은 사라집니다. [다운로드 버튼]을 눌러 다운로드하세요.")
                     except AttributeError:
                         st.caption(f"⚠️ 아직 작성한 글이 없습니다. [글 생성하기]를 눌러 글을 작성하세요.")
