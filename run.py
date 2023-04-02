@@ -353,6 +353,7 @@ with col_gpt2:
     with st.expander('📃 지원자님의 정보를 바탕으로 채용공고에 맞는 글을 작성합니다.', expanded=True):
         with st.container():
             st.session_state.typed_text2 = ''
+            st.checkbox(f'{st.session_state.model_name}가 생성한 추가된 회사 정보를 포함합니다.', key='addition', value=False)
             if st.button('글 생성하기'):
                 if jp_desc:
                     _, col_center, _ = st.columns([1, 10, 1])
@@ -360,7 +361,7 @@ with col_gpt2:
                         st.caption("⏳ 글 작성이 끝나면 [다운로드 버튼]이 나타납니다.")
                         with st.container():
                             try:
-                                if st.session_state.typed_text1:
+                                if st.session_state.addition:
                                     messages_2 = [
                                         {"role": "system", "content": "You are a helpful assistant."},
                                         {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
