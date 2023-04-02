@@ -362,12 +362,12 @@ with col_gpt2:
                         with st.container():
                             try:
                                 if st.session_state.addition:
-                                    if st.session_state.typed_text1:
+                                    if st.session_state.comp_info:
                                         messages_2 = [
                                             {"role": "system", "content": "You are a helpful assistant."},
                                             {"role": "user", "content": f"나는 회사에 지원하는데 너의 도움이 필요해. 회사의 채용정보는 다음과 같아. {jp_desc}"},
                                             {"role": "assistant", "content": "네, 알겠습니다. 위 채용정보를 기반으로 도와드리겠습니다."},
-                                            {"role": "user", "content": f"이 회사의 일하는 방식, 인재상, 문화는 다음과 같아. {st.session_state.typed_text1}"},
+                                            {"role": "user", "content": f"이 회사의 일하는 방식, 인재상, 문화는 다음과 같아. {st.session_state.comp_info}"},
                                             {"role": "assistant", "content": "네, 알겠습니다. 위 정보를 참고하여 작성하겠습니다."},
                                             {"role": "user", "content": f"나는 다음과 같은 이력을 가지고 있어. {user_desc}"},
                                             {"role": "assistant", "content": "네, 알겠습니다. 위 이력을 기반으로 도와드리겠습니다."},
