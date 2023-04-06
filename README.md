@@ -39,7 +39,7 @@ _[그림 1] http://gpt-recruit.com GPT-4 채용공고별 자소서 가이드 서
 
 
 - service link: http://gpt-recruit.com/
-- 관련 문서: [GPT-4 기반 채용공고별 AI 자소서 작성 가이드 개인화 서비스](https://github.com/comsa33/ai_resume/blob/main/KIPS_C2023A0006.pdf)
+- 관련 문서: [GPT-4 기반 채용공고별 AI 자소서 작성 가이드 개인화 서비스](https://github.com/comsa33/GPT4-AI-resume/blob/main/KIPS_3.pdf)
 
 
 
