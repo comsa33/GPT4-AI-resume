@@ -38,7 +38,7 @@ openai.ChatCompletion.create(
 _[그림 1] http://gpt-recruit.com GPT-4 채용공고별 자소서 가이드 서비스 화면: GPT모델 선택 기능, 글 창작성 파라미터 조절 기능, 글 주제 입력 창, 글 생성하기 버튼, 작성된 글 화면 및 결과물 다운로드 버튼을 포함한 서비스 인터페이스_
 
 
-- service link: http://gpt-recruit.com/
+- service link: https://gpt-recruit.com/
 - 관련 문서: [GPT-4 기반 채용공고별 AI 자소서 작성 가이드 개인화 서비스](https://github.com/comsa33/GPT4-AI-resume/blob/main/KIPS_3.pdf)
 
 
