@@ -34,8 +34,9 @@ openai.ChatCompletion.create(
 )
 ```
 
-![image](https://user-images.githubusercontent.com/61719257/228704474-6d2af724-b3a3-4f55-9701-af77e7d4686a.png)
-_[그림 1] http://gpt-recruit.com GPT-4 채용공고별 자소서 가이드 서비스 화면: GPT모델 선택 기능, 글 창작성 파라미터 조절 기능, 글 주제 입력 창, 글 생성하기 버튼, 작성된 글 화면 및 결과물 다운로드 버튼을 포함한 서비스 인터페이스_
+![Screenshot 2023-04-05 at 14 22 36](https://user-images.githubusercontent.com/61719257/230805617-c4a9d8de-0349-4ce3-b42d-5ec1c95700c9.png)
+![Screenshot 2023-04-05 at 14 27 03](https://user-images.githubusercontent.com/61719257/230805619-70566c1c-9038-4b81-8110-20496dcb2d5d.png)
+_http://gpt-recruit.com GPT-4 채용공고별 자소서 가이드 서비스 화면: GPT모델 선택 기능, 글 창작성 파라미터 조절 기능, 글 주제 입력 창, 글 생성하기 버튼, 작성된 글 화면 및 결과물 다운로드 버튼을 포함한 서비스 인터페이스_
 
 
 - service link: https://gpt-recruit.com/
